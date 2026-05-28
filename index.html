@@ -8,14 +8,15 @@
 <style>
 :root{
   --dg:#0D2B1F;--mg:#114734;--bg:#1D9E75;
-  --gold:#D4AF37;--gl:#E0C889;--cream:#F5F0E8;--err:#e74c3c;
+  --gold:#D4AF37;--gl:#E0C889;--cream:#F5F0E8;
+  --err:#e74c3c;--warn:#f39c12;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{height:100%;overflow:hidden;}
 body{font-family:'Montserrat',sans-serif;background:var(--dg);color:var(--cream);}
 #app{position:relative;width:100%;height:100vh;overflow:hidden;}
 
-/* ── PAGE SLIDE TRANSITION ── */
+/* ── PAGE SLIDE ── */
 .screen{
   position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
   transition:transform .56s cubic-bezier(.77,0,.18,1),opacity .4s ease;
@@ -31,13 +32,9 @@ body{font-family:'Montserrat',sans-serif;background:var(--dg);color:var(--cream)
     radial-gradient(ellipse at 85% 20%,rgba(212,175,55,.05) 0%,transparent 50%);
 }
 
-/* ════════════════════════════════
-   LOGIN
-═══════════════════════════════════ */
+/* ════════ LOGIN ════════ */
 #login{background:var(--dg);}
 .login-wrap{min-height:100vh;display:flex;flex-direction:column;position:relative;z-index:5;}
-
-/* Header */
 .lh{
   display:flex;align-items:center;justify-content:space-between;
   padding:16px 48px;border-bottom:1px solid rgba(212,175,55,.18);
@@ -55,163 +52,111 @@ body{font-family:'Montserrat',sans-serif;background:var(--dg);color:var(--cream)
 .logo-name span{display:block;font-size:10px;color:rgba(212,175,55,.5);letter-spacing:3px;}
 .hbadge{font-family:'Cinzel',serif;font-size:10px;color:var(--gold);letter-spacing:2px;
   border:1px solid rgba(212,175,55,.28);padding:5px 14px;border-radius:2px;background:rgba(212,175,55,.04);}
-
-/* Two-col split */
 .lmain{flex:1;display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 76px);}
-
-/* Left — branding */
 .linfo{display:flex;flex-direction:column;justify-content:center;padding:60px 64px;position:relative;}
-.linfo::after{
-  content:'';position:absolute;right:0;top:8%;bottom:8%;width:1px;
-  background:linear-gradient(180deg,transparent,rgba(212,175,55,.3),transparent);
-}
-.etag{
-  display:inline-block;font-size:10px;font-weight:600;letter-spacing:4px;
-  text-transform:uppercase;color:var(--bg);border:1px solid rgba(29,158,117,.35);
-  padding:5px 14px;margin-bottom:26px;border-radius:2px;width:fit-content;
-}
-.etitle{
-  font-family:'Cinzel',serif;font-size:clamp(48px,5.5vw,76px);font-weight:900;
-  line-height:.92;letter-spacing:-1px;
+.linfo::after{content:'';position:absolute;right:0;top:8%;bottom:8%;width:1px;
+  background:linear-gradient(180deg,transparent,rgba(212,175,55,.3),transparent);}
+.etag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:4px;text-transform:uppercase;
+  color:var(--bg);border:1px solid rgba(29,158,117,.35);padding:5px 14px;margin-bottom:26px;border-radius:2px;width:fit-content;}
+.etitle{font-family:'Cinzel',serif;font-size:clamp(48px,5.5vw,76px);font-weight:900;line-height:.92;letter-spacing:-1px;
   background:linear-gradient(135deg,var(--gold) 0%,var(--gl) 40%,var(--gold) 70%,#b8860b 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:9px;
-}
-.esub{
-  font-family:'Cinzel',serif;font-size:clamp(10px,1vw,13px);letter-spacing:5px;
-  text-transform:uppercase;color:var(--gl);margin-bottom:28px;opacity:.82;
-}
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:9px;}
+.esub{font-family:'Cinzel',serif;font-size:clamp(10px,1vw,13px);letter-spacing:5px;text-transform:uppercase;
+  color:var(--gl);margin-bottom:28px;opacity:.82;}
 .ediv{width:56px;height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin-bottom:24px;}
-.edesc{
-  font-family:'Playfair Display',serif;font-style:italic;font-size:15px;
-  line-height:1.85;color:rgba(245,240,232,.7);max-width:400px;margin-bottom:32px;
-}
+.edesc{font-family:'Playfair Display',serif;font-style:italic;font-size:15px;line-height:1.85;
+  color:rgba(245,240,232,.7);max-width:400px;margin-bottom:32px;}
 .edesc strong{color:var(--gl);font-style:normal;}
 .estats{display:flex;gap:36px;}
 .stat-n{font-family:'Cinzel',serif;font-size:26px;font-weight:700;color:var(--gold);line-height:1;margin-bottom:3px;}
 .stat-l{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(245,240,232,.4);}
-
-/* Right — form */
-.lform-wrap{
-  display:flex;flex-direction:column;justify-content:center;align-items:center;
-  padding:60px 44px;background:rgba(17,71,52,.1);
-}
-.fcard{
-  width:100%;max-width:400px;
-  background:rgba(13,43,31,.75);border:1px solid rgba(212,175,55,.2);border-radius:4px;
-  padding:44px 40px;backdrop-filter:blur(24px);
-  box-shadow:0 30px 80px rgba(0,0,0,.44),inset 0 1px 0 rgba(212,175,55,.09);
-  position:relative;overflow:hidden;
-}
-.fcard::before{
-  content:'';position:absolute;top:0;left:20%;right:20%;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
-}
+.lform-wrap{display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:60px 44px;background:rgba(17,71,52,.1);}
+.fcard{width:100%;max-width:400px;background:rgba(13,43,31,.75);border:1px solid rgba(212,175,55,.2);
+  border-radius:4px;padding:44px 40px;backdrop-filter:blur(24px);
+  box-shadow:0 30px 80px rgba(0,0,0,.44),inset 0 1px 0 rgba(212,175,55,.09);position:relative;overflow:hidden;}
+.fcard::before{content:'';position:absolute;top:0;left:20%;right:20%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);}
 .corner{position:absolute;width:18px;height:18px;border-color:rgba(212,175,55,.2);border-style:solid;}
 .c-tl{top:10px;left:10px;border-width:1px 0 0 1px;}
 .c-tr{top:10px;right:10px;border-width:1px 1px 0 0;}
 .c-bl{bottom:10px;left:10px;border-width:0 0 1px 1px;}
 .c-br{bottom:10px;right:10px;border-width:0 1px 1px 0;}
-
 .fh{text-align:center;margin-bottom:32px;}
 .fh h2{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--gl);letter-spacing:3px;text-transform:uppercase;margin-bottom:7px;}
 .fh p{font-size:10px;letter-spacing:1.5px;color:rgba(245,240,232,.38);text-transform:uppercase;}
-
 .fg{margin-bottom:20px;}
 .fg label{display:block;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-weight:600;}
-.fg input{
+.fg input,.fg select,.fg textarea{
   width:100%;background:rgba(245,240,232,.04);border:1px solid rgba(212,175,55,.22);
   border-radius:2px;padding:13px 15px;color:var(--cream);font-family:'Montserrat',sans-serif;
-  font-size:14px;letter-spacing:.5px;transition:all .3s;outline:none;
+  font-size:14px;letter-spacing:.5px;transition:all .3s;outline:none;-webkit-appearance:none;
 }
-.fg input:focus{border-color:var(--gold);background:rgba(212,175,55,.05);box-shadow:0 0 0 3px rgba(212,175,55,.07);}
-.fg input.err{border-color:var(--err);}
-.fg input::placeholder{color:rgba(245,240,232,.2);}
-
+.fg input:focus,.fg select:focus,.fg textarea:focus{
+  border-color:var(--gold);background:rgba(212,175,55,.05);box-shadow:0 0 0 3px rgba(212,175,55,.07);}
+.fg input.err,.fg select.err,.fg textarea.err{border-color:var(--err);}
+.fg input::placeholder,.fg textarea::placeholder{color:rgba(245,240,232,.2);}
+.fg select option{background:var(--dg);color:var(--cream);}
+.fg textarea{resize:vertical;min-height:80px;line-height:1.5;}
+.fg input:disabled,.fg select:disabled,.fg textarea:disabled{
+  opacity:.5;cursor:not-allowed;border-color:rgba(212,175,55,.1);}
 .errmsg{font-size:10px;color:var(--err);margin-top:6px;letter-spacing:.4px;display:none;}
 .errmsg.show{display:block;}
-
-.lbtn{
-  width:100%;padding:14px;margin-top:6px;
+.lbtn{width:100%;padding:14px;margin-top:6px;
   background:linear-gradient(135deg,#b8860b 0%,var(--gold) 40%,var(--gl) 60%,var(--gold) 80%,#8b6914 100%);
   border:none;border-radius:2px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;
-  letter-spacing:3px;text-transform:uppercase;color:var(--dg);cursor:pointer;
-  transition:all .3s;position:relative;overflow:hidden;
-}
-.lbtn::after{
-  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transition:left .4s;
-}
+  letter-spacing:3px;text-transform:uppercase;color:var(--dg);cursor:pointer;transition:all .3s;
+  position:relative;overflow:hidden;}
+.lbtn::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transition:left .4s;}
 .lbtn:hover::after{left:100%;}
 .lbtn:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(212,175,55,.28);}
 .fnote{text-align:center;margin-top:18px;font-size:10px;color:rgba(245,240,232,.28);letter-spacing:.8px;line-height:1.7;}
 .fnote a{color:rgba(212,175,55,.36);text-decoration:none;}
 
-/* ════════════════════════════════
-   DASHBOARD
-═══════════════════════════════════ */
+/* ════════ DASHBOARD ════════ */
 #dash{background:var(--dg);}
 .dash-wrap{min-height:100vh;position:relative;z-index:5;}
-
-.dn{
-  position:sticky;top:0;z-index:20;background:rgba(13,43,31,.96);
-  backdrop-filter:blur(18px);border-bottom:1px solid rgba(212,175,55,.18);
-  padding:13px 40px;display:flex;align-items:center;justify-content:space-between;
-}
+.dn{position:sticky;top:0;z-index:20;background:rgba(13,43,31,.96);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(212,175,55,.18);padding:13px 40px;
+  display:flex;align-items:center;justify-content:space-between;}
 .dn-l{display:flex;align-items:center;gap:14px;}
 .dn-logo{font-family:'Cinzel',serif;font-size:15px;font-weight:700;color:var(--gold);letter-spacing:2px;}
 .dn-logo span{color:var(--gl);font-weight:400;font-size:12px;}
 .dn-sep{width:1px;height:18px;background:rgba(212,175,55,.28);}
 .dn-greet{font-size:11px;color:rgba(245,240,232,.52);letter-spacing:.4px;}
 .dn-greet strong{color:var(--gl);font-weight:600;}
-.back-btn{
-  font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;
+.back-btn{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;
   color:rgba(212,175,55,.6);background:transparent;border:1px solid rgba(212,175,55,.2);
-  padding:6px 15px;cursor:pointer;transition:all .3s;border-radius:2px;font-weight:600;
-}
+  padding:6px 15px;cursor:pointer;transition:all .3s;border-radius:2px;font-weight:600;}
 .back-btn:hover{color:var(--gold);border-color:var(--gold);background:rgba(212,175,55,.05);}
-
 .dc{max-width:1060px;margin:0 auto;padding:44px 36px;}
 
-/* Hero card */
-.dhero{
-  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:28px;
+/* Hero */
+.dhero{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:28px;
   padding:36px 40px;background:rgba(17,71,52,.28);border:1px solid rgba(212,175,55,.18);
-  border-radius:4px;margin-bottom:28px;position:relative;overflow:hidden;
-}
-.dhero::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,transparent,var(--gold),var(--gl),var(--gold),transparent);
-}
-.davatar{
-  width:72px;height:72px;border-radius:50%;border:2px solid var(--gold);flex-shrink:0;
+  border-radius:4px;margin-bottom:28px;position:relative;overflow:hidden;}
+.dhero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--gl),var(--gold),transparent);}
+.davatar{width:72px;height:72px;border-radius:50%;border:2px solid var(--gold);flex-shrink:0;
   background:linear-gradient(135deg,var(--mg),var(--bg));display:flex;align-items:center;
   justify-content:center;font-family:'Cinzel',serif;font-size:24px;font-weight:700;color:var(--gold);
-  box-shadow:0 0 28px rgba(212,175,55,.14);
-}
-.dinfo h1{
-  font-family:'Cinzel',serif;font-size:clamp(18px,2.2vw,26px);font-weight:700;
-  color:var(--gl);letter-spacing:.8px;margin-bottom:5px;text-transform:capitalize;
-}
-.roletag{
-  display:inline-block;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--bg);
-  border:1px solid rgba(29,158,117,.32);padding:2px 10px;border-radius:20px;margin-bottom:6px;
-}
+  box-shadow:0 0 28px rgba(212,175,55,.14);}
+.dinfo h1{font-family:'Cinzel',serif;font-size:clamp(18px,2.2vw,26px);font-weight:700;
+  color:var(--gl);letter-spacing:.8px;margin-bottom:5px;text-transform:capitalize;}
+.roletag{display:inline-block;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--bg);
+  border:1px solid rgba(29,158,117,.32);padding:2px 10px;border-radius:20px;margin-bottom:6px;}
 .classinf{font-size:11px;color:rgba(245,240,232,.42);letter-spacing:.4px;}
 .hbadge-num .bl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,175,55,.4);margin-bottom:4px;}
 .hbadge-num .sno{font-family:'Cinzel',serif;font-size:38px;font-weight:900;color:rgba(212,175,55,.12);line-height:1;}
 
-/* 3-col contact cards */
+/* Contact cards */
 .cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
-.icard{
-  background:rgba(13,43,31,.6);border:1px solid rgba(212,175,55,.13);border-radius:4px;
-  padding:22px 24px;transition:border-color .3s;position:relative;overflow:hidden;
-}
+.icard{background:rgba(13,43,31,.6);border:1px solid rgba(212,175,55,.13);border-radius:4px;
+  padding:22px 24px;transition:border-color .3s;position:relative;overflow:hidden;}
 .icard:hover{border-color:rgba(212,175,55,.32);}
-.icard::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--bg),transparent);opacity:0;transition:opacity .3s;
-}
+.icard::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--bg),transparent);opacity:0;transition:opacity .3s;}
 .icard:hover::after{opacity:1;}
 .cico{width:30px;height:30px;margin-bottom:12px;opacity:.65;}
 .clabel{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:5px;font-weight:600;}
@@ -220,32 +165,19 @@ body{font-family:'Montserrat',sans-serif;background:var(--dg);color:var(--cream)
 .cval a{color:var(--bg);text-decoration:none;font-size:12px;font-family:'Montserrat',sans-serif;word-break:break-all;}
 .cval a:hover{color:var(--gl);}
 
-/* Committee + Portfolio block */
-.cblock{
-  background:rgba(13,43,31,.6);border:1px solid rgba(212,175,55,.18);border-radius:4px;
-  padding:30px 34px;margin-bottom:24px;position:relative;overflow:hidden;
-}
-.cblock::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,var(--gold),var(--gl),transparent);
-}
-.sec-title{
-  font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:3px;
+/* Committee + Portfolio */
+.cblock{background:rgba(13,43,31,.6);border:1px solid rgba(212,175,55,.18);border-radius:4px;
+  padding:30px 34px;margin-bottom:24px;position:relative;overflow:hidden;}
+.cblock::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--gold),var(--gl),transparent);}
+.sec-title{font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:3px;
   text-transform:uppercase;color:var(--gold);margin-bottom:20px;
-  display:flex;align-items:center;gap:10px;
-}
+  display:flex;align-items:center;gap:10px;}
 .sec-title::after{content:'';flex:1;height:1px;background:rgba(212,175,55,.18);}
-
-/* The two split columns */
-.assign-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:0;
-  border:1px solid rgba(29,158,117,.2);border-radius:3px;overflow:hidden;
-}
+.assign-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;
+  border:1px solid rgba(29,158,117,.2);border-radius:3px;overflow:hidden;}
 .assign-col{padding:24px 26px;}
-.assign-col:first-child{
-  border-right:1px solid rgba(29,158,117,.2);
-  background:rgba(29,158,117,.06);
-}
+.assign-col:first-child{border-right:1px solid rgba(29,158,117,.2);background:rgba(29,158,117,.06);}
 .assign-col:last-child{background:rgba(212,175,55,.04);}
 .assign-label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;margin-bottom:10px;}
 .assign-col:first-child .assign-label{color:var(--bg);}
@@ -255,31 +187,96 @@ body{font-family:'Montserrat',sans-serif;background:var(--dg);color:var(--cream)
 .assign-col:last-child  .assign-value{color:var(--cream);}
 .assign-sub{font-size:10px;margin-top:5px;letter-spacing:.3px;color:rgba(245,240,232,.36);}
 
-/* Agenda block */
-.ablock{
-  background:rgba(13,43,31,.6);border:1px solid rgba(212,175,55,.18);border-radius:4px;
-  padding:30px 34px;margin-bottom:28px;position:relative;overflow:hidden;
-}
-.ablock::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,var(--gl),transparent);
-}
-.atopic{
-  display:inline-block;font-family:'Cinzel',serif;font-size:13px;font-weight:600;
+/* Agenda */
+.ablock{background:rgba(13,43,31,.6);border:1px solid rgba(212,175,55,.18);border-radius:4px;
+  padding:30px 34px;margin-bottom:24px;position:relative;overflow:hidden;}
+.ablock::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--gl),transparent);}
+.atopic{display:inline-block;font-family:'Cinzel',serif;font-size:13px;font-weight:600;
   color:var(--gl);background:rgba(212,175,55,.07);border:1px solid rgba(212,175,55,.18);
-  padding:7px 16px;border-radius:2px;margin-bottom:14px;letter-spacing:.4px;
-}
-.adesc{
-  font-family:'Playfair Display',serif;font-style:italic;font-size:14px;
-  line-height:1.9;color:rgba(245,240,232,.65);max-width:680px;margin-bottom:18px;
-}
-.acta{
-  display:inline-flex;align-items:center;gap:9px;font-family:'Cinzel',serif;font-size:10px;
+  padding:7px 16px;border-radius:2px;margin-bottom:14px;letter-spacing:.4px;}
+.adesc{font-family:'Playfair Display',serif;font-style:italic;font-size:14px;line-height:1.9;
+  color:rgba(245,240,232,.65);max-width:680px;margin-bottom:18px;}
+.acta{display:inline-flex;align-items:center;gap:9px;font-family:'Cinzel',serif;font-size:10px;
   font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--dg);
   background:linear-gradient(135deg,var(--gold),var(--gl));padding:11px 24px;border-radius:2px;
-  text-decoration:none;transition:all .3s;box-shadow:0 4px 18px rgba(212,175,55,.18);
-}
+  text-decoration:none;transition:all .3s;box-shadow:0 4px 18px rgba(212,175,55,.18);}
 .acta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(212,175,55,.28);}
+
+/* ── REQUEST CHANGE BLOCK ── */
+.rblock{
+  background:rgba(13,43,31,.6);
+  border:1px solid rgba(231,76,60,.2);
+  border-radius:4px;padding:30px 34px;margin-bottom:28px;
+  position:relative;overflow:hidden;
+}
+.rblock::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,rgba(231,76,60,.5),rgba(243,156,18,.4),transparent);}
+.req-intro{
+  display:flex;align-items:flex-start;gap:18px;
+  padding:18px 20px;background:rgba(243,156,18,.06);
+  border:1px solid rgba(243,156,18,.2);border-radius:3px;margin-bottom:24px;
+}
+.req-intro-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+.req-intro-text{font-size:12px;line-height:1.75;color:rgba(245,240,232,.65);letter-spacing:.3px;}
+.req-intro-text strong{color:var(--warn);font-weight:600;}
+
+/* Request toggle button */
+.req-toggle-btn{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(231,76,60,.8);background:transparent;
+  border:1px solid rgba(231,76,60,.3);padding:12px 22px;border-radius:2px;
+  cursor:pointer;transition:all .3s;
+}
+.req-toggle-btn:hover{color:#e74c3c;border-color:rgba(231,76,60,.6);background:rgba(231,76,60,.05);}
+.req-toggle-btn svg{transition:transform .3s;}
+.req-toggle-btn.open svg{transform:rotate(45deg);}
+
+/* Request form (hidden by default) */
+.req-form-wrap{
+  max-height:0;overflow:hidden;
+  transition:max-height .5s cubic-bezier(.77,0,.18,1),opacity .35s ease;
+  opacity:0;
+}
+.req-form-wrap.open{max-height:1200px;opacity:1;}
+
+.req-form{margin-top:24px;}
+.req-divider{height:1px;background:rgba(231,76,60,.15);margin:20px 0;}
+
+/* Auto-filled field look */
+.fg-auto label::after{
+  content:' — auto-filled';font-size:8px;letter-spacing:1px;color:var(--bg);
+  font-style:italic;margin-left:4px;
+}
+.fg-auto input{
+  color:rgba(245,240,232,.5);border-color:rgba(212,175,55,.12);cursor:not-allowed;
+  background:rgba(29,158,117,.04);
+}
+
+/* Submit request button */
+.req-submit-btn{
+  width:100%;padding:14px;margin-top:8px;
+  background:linear-gradient(135deg,#922b21,#e74c3c,#f1948a,#e74c3c,#922b21);
+  border:none;border-radius:2px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;color:#fff;cursor:pointer;transition:all .3s;
+  position:relative;overflow:hidden;
+}
+.req-submit-btn::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transition:left .4s;}
+.req-submit-btn:hover::after{left:100%;}
+.req-submit-btn:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(231,76,60,.3);}
+.req-submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+/* Success / error states */
+.req-status{
+  display:none;padding:14px 18px;border-radius:3px;margin-top:14px;
+  font-size:12px;letter-spacing:.4px;line-height:1.6;
+}
+.req-status.success{
+  display:block;background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.3);color:var(--bg);}
+.req-status.fail{
+  display:block;background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.3);color:#e74c3c;}
 
 /* Footer */
 .dfooter{text-align:center;padding:26px;border-top:1px solid rgba(212,175,55,.08);margin-top:8px;}
@@ -293,11 +290,10 @@ body{font-family:'Montserrat',sans-serif;background:var(--dg);color:var(--cream)
 .fu2{animation:fadeUp .5s .14s ease both;opacity:0;}
 .fu3{animation:fadeUp .5s .21s ease both;opacity:0;}
 .fu4{animation:fadeUp .5s .28s ease both;opacity:0;}
+.fu5{animation:fadeUp .5s .35s ease both;opacity:0;}
 
 /* Responsive */
-@media(max-width:900px){
-  .cgrid{grid-template-columns:1fr 1fr;}
-}
+@media(max-width:900px){.cgrid{grid-template-columns:1fr 1fr;}}
 @media(max-width:768px){
   .lmain{grid-template-columns:1fr;}
   .linfo{display:none;}
@@ -317,10 +313,9 @@ body{font-family:'Montserrat',sans-serif;background:var(--dg);color:var(--cream)
 <body>
 <div id="app">
 
-<!-- ══════════════ LOGIN PAGE ══════════════ -->
+<!-- ══════════════ LOGIN ══════════════ -->
 <div id="login" class="screen visible">
 <div class="login-wrap">
-
   <header class="lh">
     <div class="logo-row">
       <div class="logo-circle">SPS<br>MUN</div>
@@ -328,23 +323,19 @@ body{font-family:'Montserrat',sans-serif;background:var(--dg);color:var(--cream)
     </div>
     <div class="hbadge">✦ Delegate Portal ✦</div>
   </header>
-
   <div class="lmain">
     <div class="linfo">
       <div class="etag fu">✦ A Decade of Diplomacy ✦</div>
       <h1 class="etitle fu1">SPSMUN<br>3.0</h1>
       <p class="esub fu1">The Era of Impact</p>
       <div class="ediv fu2"></div>
-      <p class="edesc fu2">
-        Satluj Public School proudly presents <strong>SPSMUN 3.0</strong> — our grandest Model United Nations conference yet. A decade of nurturing young diplomats, a future of <strong>global change</strong>. Be heard. Make an impact. Change tomorrow.
-      </p>
+      <p class="edesc fu2">Satluj Public School proudly presents <strong>SPSMUN 3.0</strong> — our grandest Model United Nations conference yet. A decade of nurturing young diplomats, a future of <strong>global change</strong>. Be heard. Make an impact. Change tomorrow.</p>
       <div class="estats fu3">
         <div><div class="stat-n">170+</div><div class="stat-l">Delegates</div></div>
         <div><div class="stat-n">10+</div><div class="stat-l">Committees</div></div>
         <div><div class="stat-n">3rd</div><div class="stat-l">Edition</div></div>
       </div>
     </div>
-
     <div class="lform-wrap">
       <div class="fcard fu2">
         <div class="corner c-tl"></div><div class="corner c-tr"></div>
@@ -355,26 +346,18 @@ body{font-family:'Montserrat',sans-serif;background:var(--dg);color:var(--cream)
         </div>
         <div class="fg">
           <label>Phone Number or Email Address</label>
-          <input type="text" id="credInput"
-            placeholder="e.g.  9876543210  or  you@email.com"
-            autocomplete="off" autofocus>
-          <div class="errmsg" id="credErr">
-            No delegate found. Please check and try again, or contact admin.
-          </div>
+          <input type="text" id="credInput" placeholder="e.g.  9876543210  or  you@email.com" autocomplete="off" autofocus>
+          <div class="errmsg" id="credErr">No delegate found. Please check and try again, or contact admin.</div>
         </div>
         <button class="lbtn" onclick="doLogin()">Access My Dashboard →</button>
-        <div class="fnote">
-          SPSMUN 3.0 · Satluj Public School, Panchkula<br>
-         
-        </div>
+        <div class="fnote">SPSMUN 3.0 · Satluj Public School, Panchkula<br><a href="https://satlujmun.com" target="_blank">satlujmun.com</a></div>
       </div>
     </div>
   </div>
-
 </div>
 </div>
 
-<!-- ══════════════ DASHBOARD PAGE ══════════════ -->
+<!-- ══════════════ DASHBOARD ══════════════ -->
 <div id="dash" class="screen hidden-right">
 <div class="dash-wrap">
 
@@ -406,35 +389,23 @@ body{font-family:'Montserrat',sans-serif;background:var(--dg);color:var(--cream)
     <!-- Contact cards -->
     <div class="cgrid">
       <div class="icard fu1">
-        <svg class="cico" viewBox="0 0 30 30" fill="none">
-          <circle cx="15" cy="15" r="14" stroke="#D4AF37" stroke-width="1" opacity=".4"/>
-          <path d="M10 13c0-2.76 2.24-5 5-5s5 2.24 5 5c0 3.5-5 8.5-5 8.5S10 16.5 10 13z" stroke="#D4AF37" stroke-width="1.2" fill="none"/>
-          <circle cx="15" cy="13" r="2" stroke="#D4AF37" stroke-width="1.2" fill="none"/>
-        </svg>
+        <svg class="cico" viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#D4AF37" stroke-width="1" opacity=".4"/><path d="M10 13c0-2.76 2.24-5 5-5s5 2.24 5 5c0 3.5-5 8.5-5 8.5S10 16.5 10 13z" stroke="#D4AF37" stroke-width="1.2" fill="none"/><circle cx="15" cy="13" r="2" stroke="#D4AF37" stroke-width="1.2" fill="none"/></svg>
         <div class="clabel">Phone Number</div>
         <div class="cval" id="dPhone">—</div>
       </div>
       <div class="icard fu2">
-        <svg class="cico" viewBox="0 0 30 30" fill="none">
-          <circle cx="15" cy="15" r="14" stroke="#D4AF37" stroke-width="1" opacity=".4"/>
-          <rect x="6" y="10" width="18" height="12" rx="1.5" stroke="#D4AF37" stroke-width="1.2" fill="none"/>
-          <path d="M6 12l9 5.5 9-5.5" stroke="#D4AF37" stroke-width="1.2"/>
-        </svg>
+        <svg class="cico" viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#D4AF37" stroke-width="1" opacity=".4"/><rect x="6" y="10" width="18" height="12" rx="1.5" stroke="#D4AF37" stroke-width="1.2" fill="none"/><path d="M6 12l9 5.5 9-5.5" stroke="#D4AF37" stroke-width="1.2"/></svg>
         <div class="clabel">Email Address</div>
         <div class="cval" id="dEmail">—</div>
       </div>
       <div class="icard fu3">
-        <svg class="cico" viewBox="0 0 30 30" fill="none">
-          <circle cx="15" cy="15" r="14" stroke="#D4AF37" stroke-width="1" opacity=".4"/>
-          <rect x="8" y="7" width="14" height="17" rx="1.5" stroke="#D4AF37" stroke-width="1.2" fill="none"/>
-          <path d="M11 12h8M11 16h8M11 20h5" stroke="#D4AF37" stroke-width="1"/>
-        </svg>
+        <svg class="cico" viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#D4AF37" stroke-width="1" opacity=".4"/><rect x="8" y="7" width="14" height="17" rx="1.5" stroke="#D4AF37" stroke-width="1.2" fill="none"/><path d="M11 12h8M11 16h8M11 20h5" stroke="#D4AF37" stroke-width="1"/></svg>
         <div class="clabel">Class & Section</div>
         <div class="cval" id="dClass">—</div>
       </div>
     </div>
 
-    <!-- Committee & Portfolio — two distinct columns -->
+    <!-- Committee & Portfolio -->
     <div class="cblock fu2">
       <div class="sec-title">✦ Committee & Portfolio Assignment</div>
       <div class="assign-grid">
@@ -457,13 +428,107 @@ body{font-family:'Montserrat',sans-serif;background:var(--dg);color:var(--cream)
       <div class="atopic" id="dAgendaTopic">—</div>
       <p class="adesc" id="dAgendaDesc">—</p>
       <a href="https://satlujmun.com" target="_blank" class="acta">
-        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-          <path d="M6.5 1a5.5 5.5 0 100 11A5.5 5.5 0 006.5 1zM1.5 6.5h10M6.5 1.5C5 3 4 4.6 4 6.5s1 3.5 2.5 5M6.5 1.5C8 3 9 4.6 9 6.5s-1 3.5-2.5 5"
-            stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
-        </svg>
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1a5.5 5.5 0 100 11A5.5 5.5 0 006.5 1zM1.5 6.5h10M6.5 1.5C5 3 4 4.6 4 6.5s1 3.5 2.5 5M6.5 1.5C8 3 9 4.6 9 6.5s-1 3.5-2.5 5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
         Visit satlujmun.com for full resources
       </a>
     </div>
+
+    <!-- ══ REQUEST CHANGE BLOCK ══ -->
+    <div class="rblock fu4">
+      <div class="sec-title" style="color:rgba(231,76,60,.7);">✦ Request a Portfolio Change</div>
+
+      <!-- Warning notice -->
+      <div class="req-intro">
+        <div class="req-intro-icon">⚠️</div>
+        <div class="req-intro-text">
+          Submitting a request does <strong>not guarantee a change</strong>. All portfolio change requests are reviewed by the SPSMUN 3.0 organising committee. Changes are granted <strong>solely at the discretion of the admin</strong>, based on your experience level, committee balance, and overall MUN history. Submitting multiple requests will not improve your chances.
+        </div>
+      </div>
+
+      <!-- Toggle button -->
+      <button class="req-toggle-btn" id="reqToggleBtn" onclick="toggleReqForm()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        Request for Change
+      </button>
+
+      <!-- Collapsible form -->
+      <div class="req-form-wrap" id="reqFormWrap">
+        <div class="req-form">
+
+          <p style="font-size:11px;color:rgba(245,240,232,.45);letter-spacing:.4px;margin-bottom:20px;line-height:1.7;">
+            Fill in only the fields you want to change. Auto-filled fields are pulled from your login and cannot be edited.
+          </p>
+
+          <div class="req-divider"></div>
+
+          <!-- Auto-filled -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div class="fg fg-auto">
+              <label>Your Name</label>
+              <input type="text" id="rName" disabled>
+            </div>
+            <div class="fg fg-auto">
+              <label>Phone Number</label>
+              <input type="text" id="rPhone" disabled>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div class="fg fg-auto">
+              <label>Current Committee</label>
+              <input type="text" id="rCurrComm" disabled>
+            </div>
+            <div class="fg fg-auto">
+              <label>Current Portfolio</label>
+              <input type="text" id="rCurrPort" disabled>
+            </div>
+          </div>
+
+          <div class="req-divider"></div>
+          <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;font-weight:600;">What You Would Like Changed</p>
+
+          <!-- Preferred committee -->
+          <div class="fg" style="margin-bottom:16px;">
+            <label>Preferred Committee <span style="color:rgba(245,240,232,.3);font-size:8px;letter-spacing:1px;">(leave blank if no change needed)</span></label>
+            <select id="rNewComm">
+              <option value="">— No change to committee —</option>
+              <option value="UNSC">UNSC — United Nations Security Council</option>
+              <option value="UNGA">UNGA — United Nations General Assembly</option>
+              <option value="UNHRC">UNHRC — United Nations Human Rights Council</option>
+              <option value="UNCSW">UNCSW — UN Commission on the Status of Women</option>
+              <option value="WHO">WHO — World Health Organization</option>
+              <option value="WHO Beginners">WHO Beginners — WHO Beginners Committee</option>
+              <option value="AIPPM">AIPPM — All India Political Parties Meet</option>
+              <option value="IPL">IPL — Indian Premier League Simulation</option>
+              <option value="IP">IP — International Press</option>
+              <option value="The Fame Files">The Fame Files</option>
+            </select>
+          </div>
+
+          <!-- Preferred portfolio -->
+          <div class="fg" style="margin-bottom:16px;">
+            <label>Preferred Portfolio <span style="color:rgba(245,240,232,.3);font-size:8px;letter-spacing:1px;">(country / team / character)</span></label>
+            <input type="text" id="rNewPort" placeholder="e.g. Portugal, Mumbai Indians, Rihanna…">
+            <div class="errmsg" id="rPortErr">Please enter a preferred portfolio.</div>
+          </div>
+
+          <!-- Reason -->
+          <div class="fg" style="margin-bottom:20px;">
+            <label>Reason for Request <span style="color:rgba(245,240,232,.3);font-size:8px;letter-spacing:1px;">(optional but helpful)</span></label>
+            <textarea id="rReason" placeholder="Briefly explain why you'd like this change…"></textarea>
+          </div>
+
+          <button class="req-submit-btn" id="reqSubmitBtn" onclick="submitRequest()">
+            Submit Request →
+          </button>
+
+          <div class="req-status" id="reqStatus"></div>
+
+        </div>
+      </div>
+    </div>
+    <!-- ══ END REQUEST BLOCK ══ -->
 
     <div class="dfooter">
       <div class="gline"></div>
@@ -649,160 +714,113 @@ const DELEGATES = [
   {"sno": "185", "name": "Uday Sandhu", "class": "10th", "section": "Whitman", "committee": "UNHRC", "portfolio": "Italy", "contact": "+91 8570045781", "email": "udayvirsandhu051@gmail.com"},
   {"sno": "186", "name": "Jeevika Sahni", "class": "9th", "section": "", "committee": "UNHRC", "portfolio": "Serbia", "contact": "+91 9878250300", "email": "jeevikasahni5@gmail.com"}
 ];
+// ─────────────────────────────────────────────────────────
+// ⚙️  ADMIN: Replace this URL after setting up Google Apps Script
+//     Instructions are in the SETUP GUIDE provided separately.
+// ─────────────────────────────────────────────────────────
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwnyuYO5a6aPri82JUVPLCud0azBAZ9WbmNLKEAjahzYCNNP74x04J6r_8au_m4bCNU/exec';
 const COMMITTEE_NAMES = {
-  'UNSC'         : 'United Nations Security Council',
-  'UNGA'         : 'United Nations General Assembly',
-  'UNHRC'        : 'United Nations Human Rights Council',
-  'UNCSW'        : 'UN Commission on the Status of Women',
-  'WHO'          : 'World Health Organization',
-  'WHO Beginners': 'WHO — Beginners Committee',
-  'AIPPM'        : 'All India Political Parties Meet',
-  'IPL'          : 'Indian Premier League Simulation',
-  'IP'           : 'International Press',
+  'UNSC'          : 'United Nations Security Council',
+  'UNGA'          : 'United Nations General Assembly',
+  'UNHRC'         : 'United Nations Human Rights Council',
+  'UNCSW'         : 'UN Commission on the Status of Women',
+  'WHO'           : 'World Health Organization',
+  'WHO Beginners' : 'WHO — Beginners Committee',
+  'AIPPM'         : 'All India Political Parties Meet',
+  'IPL'           : 'Indian Premier League Simulation',
+  'IP'            : 'International Press',
   'The Fame Files': 'The Fame Files Committee',
-  'DISEC'        : 'Disarmament & International Security'
+  'DISEC'         : 'Disarmament & International Security'
 };
-
 const PORTFOLIO_SUB = {
-  'UNSC'         : 'Country Representation',
-  'UNGA'         : 'Country Representation',
-  'UNHRC'        : 'Country Representation',
-  'UNCSW'        : 'Country Representation',
-  'WHO'          : 'Country Representation',
-  'WHO Beginners': 'Country Representation',
-  'AIPPM'        : 'Political Leader / Representative',
-  'IPL'          : 'Team Assignment',
-  'IP'           : 'Press Role / Specialisation',
-  'The Fame Files': 'Pop Star / Icon'
+  'UNSC':'Country Representation','UNGA':'Country Representation',
+  'UNHRC':'Country Representation','UNCSW':'Country Representation',
+  'WHO':'Country Representation','WHO Beginners':'Country Representation',
+  'AIPPM':'Political Leader / Representative','IPL':'Team Assignment',
+  'IP':'Press Role / Specialisation','The Fame Files':'Pop Star / Icon'
 };
-
 const AGENDAS = {
-  'UNSC':{
-    topic:'Maintaining International Peace & Security',
-    desc:'The UN Security Council debates critical issues of international peace and security — conflict resolution, sanctions, peacekeeping operations, and preventing the spread of weapons of mass destruction.'
-  },
-  'UNGA':{
-    topic:'Sustainable Development & Global Governance',
-    desc:'The General Assembly addresses matters of global concern including sustainable development, humanitarian affairs, climate change, and the promotion of international law and multilateral cooperation.'
-  },
-  'UNHRC':{
-    topic:'Promotion and Protection of Human Rights',
-    desc:'The UN Human Rights Council works to promote and protect human rights globally, addressing violations, recommending policies, and supporting the entire UN human rights system.'
-  },
-  'UNCSW':{
-    topic:'Gender Equality & Empowerment of Women',
-    desc:"The UN Commission on the Status of Women is dedicated to gender equality and the advancement of women — evaluating progress, identifying challenges, and setting global standards for women's rights and dignity."
-  },
-  'WHO Beginners':{
-    topic:'Healthcare Access for All Nations',
-    desc:'The WHO Beginners committee introduces young diplomats to global health policy — exploring healthcare access, immunisation programs, and the role of international cooperation in fighting disease outbreaks.'
-  },
-  'WHO':{
-    topic:'Global Health Policy & Disease Prevention',
-    desc:'The World Health Organization committee debates international health emergencies, disease prevention strategies, equitable healthcare access in developing nations, and coordinated global responses to health crises.'
-  },
-  'AIPPM':{
-    topic:'National Development & Policy Reform in India',
-    desc:"The All India Political Parties Meet brings together representatives of India's major political parties to debate national policies, governance reforms, economic development priorities, and pressing social challenges."
-  },
-  'IPL':{
-    topic:'Cricket Governance & Sports Diplomacy',
-    desc:"The IPL Simulation committee explores the governance of the Indian Premier League — covering player auctions, franchise management, broadcasting rights, and cricket's cultural and diplomatic significance in India."
-  },
-  'IP':{
-    topic:'Press Freedom & Ethical Journalism',
-    desc:'The International Press committee places delegates in the role of journalists, photographers, and correspondents — filing reports, conducting interviews, and navigating the ethics of modern media at a global summit.'
-  },
-  'The Fame Files':{
-    topic:'Pop Culture, Media & Global Soft Power',
-    desc:'A unique committee exploring the worldwide cultural impact of pop icons, streaming media trends, and the intersection of entertainment with international affairs and the exercise of soft power.'
-  },
-  'DEFAULT':{
-    topic:'Committee Agenda — Visit satlujmun.com',
-    desc:'Full agenda details, background guides, and position paper guidelines for your committee are available on the official SPSMUN 3.0 website. Visit satlujmun.com for complete resources and preparation materials.'
-  }
+  'UNSC':{topic:'Maintaining International Peace & Security',desc:'The UN Security Council debates critical issues of international peace and security — conflict resolution, sanctions, peacekeeping operations, and preventing the spread of weapons of mass destruction.'},
+  'UNGA':{topic:'Sustainable Development & Global Governance',desc:'The General Assembly addresses sustainable development, humanitarian affairs, climate change, and the promotion of international law and multilateral cooperation.'},
+  'UNHRC':{topic:'Promotion and Protection of Human Rights',desc:'The UN Human Rights Council works to promote and protect human rights globally, addressing violations, recommending policies, and supporting the entire UN human rights system.'},
+  'UNCSW':{topic:'Gender Equality & Empowerment of Women',desc:"The UN Commission on the Status of Women is dedicated to gender equality and the advancement of women — evaluating progress, setting global standards for women's rights and dignity."},
+  'WHO Beginners':{topic:'Healthcare Access for All Nations',desc:'The WHO Beginners committee introduces young diplomats to global health policy — exploring healthcare access, immunisation programs, and international cooperation in fighting disease.'},
+  'WHO':{topic:'Global Health Policy & Disease Prevention',desc:'The WHO committee debates international health emergencies, disease prevention strategies, equitable healthcare access in developing nations, and coordinated global responses to health crises.'},
+  'AIPPM':{topic:'National Development & Policy Reform in India',desc:"The All India Political Parties Meet brings together representatives of India's major political parties to debate national policies, governance reforms, and pressing social challenges."},
+  'IPL':{topic:'Cricket Governance & Sports Diplomacy',desc:"The IPL Simulation explores the governance of the Indian Premier League — player auctions, franchise management, broadcasting rights, and cricket's cultural significance in India."},
+  'IP':{topic:'Press Freedom & Ethical Journalism',desc:'The International Press committee places delegates as journalists and photographers — filing reports, conducting interviews, and navigating the ethics of modern media at a global summit.'},
+  'The Fame Files':{topic:'Pop Culture, Media & Global Soft Power',desc:'A unique committee exploring the worldwide cultural impact of pop icons, streaming media trends, and the intersection of entertainment with international affairs and soft power.'},
+  'DEFAULT':{topic:'Committee Agenda — Visit satlujmun.com',desc:'Full agenda details, background guides, and position paper guidelines are available on the official SPSMUN 3.0 website. Visit satlujmun.com for complete resources.'}
 };
 
-/* ── PAGE TRANSITIONS ──────────────────────── */
+// ── Current logged-in delegate ────────────────────────────
+let currentDelegate = null;
+
+// ── PAGE TRANSITIONS ──────────────────────────────────────
 function showDash() {
   const l = document.getElementById('login');
   const d = document.getElementById('dash');
-  l.classList.remove('visible');
-  l.classList.add('hidden-left');
-  d.classList.remove('hidden-right');
-  d.classList.add('visible');
+  l.classList.remove('visible'); l.classList.add('hidden-left');
+  d.classList.remove('hidden-right'); d.classList.add('visible');
   d.scrollTop = 0;
 }
-
 function goBack() {
   const l = document.getElementById('login');
   const d = document.getElementById('dash');
-  d.classList.remove('visible');
-  d.classList.add('hidden-right');
-  l.classList.remove('hidden-left');
-  l.classList.add('visible');
+  d.classList.remove('visible'); d.classList.add('hidden-right');
+  l.classList.remove('hidden-left'); l.classList.add('visible');
   document.getElementById('credInput').value = '';
   document.getElementById('credErr').classList.remove('show');
   document.getElementById('credInput').classList.remove('err');
+  // Reset request form on logout
+  closeReqForm();
+  document.getElementById('reqStatus').className = 'req-status';
+  document.getElementById('reqStatus').textContent = '';
   setTimeout(() => document.getElementById('credInput').focus(), 580);
 }
 
-/* ── LOGIN ─────────────────────────────────── */
+// ── LOGIN ─────────────────────────────────────────────────
 function doLogin() {
   const raw   = document.getElementById('credInput').value.trim();
   const clean = raw.toLowerCase().replace(/\s+/g, '');
   const errEl = document.getElementById('credErr');
   const inpEl = document.getElementById('credInput');
-
   if (!clean) {
     errEl.textContent = 'Please enter your phone number or email address.';
-    errEl.classList.add('show');
-    inpEl.classList.add('err');
-    return;
+    errEl.classList.add('show'); inpEl.classList.add('err'); return;
   }
-
   const inputNoCode = clean.replace(/^\+91/, '');
-
   const found = DELEGATES.find(d => {
     const ph = (d.contact || '').replace(/\s+/g, '').replace(/^\+91/, '').toLowerCase();
     const em = (d.email   || '').toLowerCase();
     return (ph && ph === inputNoCode) || (em && em === clean);
   });
-
   if (!found) {
     errEl.textContent = 'No delegate found. Please check your phone/email or contact admin.';
-    errEl.classList.add('show');
-    inpEl.classList.add('err');
-    return;
+    errEl.classList.add('show'); inpEl.classList.add('err'); return;
   }
-
-  errEl.classList.remove('show');
-  inpEl.classList.remove('err');
+  errEl.classList.remove('show'); inpEl.classList.remove('err');
+  currentDelegate = found;
   fillDash(found);
   showDash();
 }
 
-/* ── FILL DASHBOARD ────────────────────────── */
+// ── FILL DASHBOARD ────────────────────────────────────────
 function fillDash(d) {
   const committee = d.committee || '—';
   const portfolio = d.portfolio || '—';
   const commFull  = COMMITTEE_NAMES[committee]  || committee;
   const portSub   = PORTFOLIO_SUB[committee]    || 'Portfolio Assignment';
   const agenda    = AGENDAS[committee]          || AGENDAS['DEFAULT'];
-
-  const nameCap = d.name.split(' ')
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
-  const initials = d.name.trim().split(/\s+/)
-    .map(w => w[0]).join('').substring(0, 2).toUpperCase();
+  const nameCap   = d.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+  const initials  = d.name.trim().split(/\s+/).map(w => w[0]).join('').substring(0, 2).toUpperCase();
 
   document.getElementById('navName').textContent    = nameCap;
   document.getElementById('avatarEl').textContent   = initials;
   document.getElementById('dName').textContent      = nameCap;
   document.getElementById('dSno').textContent       = '#' + d.sno;
-  document.getElementById('dClassSec').textContent  =
-    'Class ' + d.class + (d.section ? ' · Section ' + d.section : '');
-  document.getElementById('dClass').textContent     =
-    'Class ' + d.class + (d.section ? ', ' + d.section : '');
+  document.getElementById('dClassSec').textContent  = 'Class ' + d.class + (d.section ? ' · Section ' + d.section : '');
+  document.getElementById('dClass').textContent     = 'Class ' + d.class + (d.section ? ', ' + d.section : '');
 
   const phEl = document.getElementById('dPhone');
   phEl.innerHTML = d.contact
@@ -820,9 +838,120 @@ function fillDash(d) {
   document.getElementById('dPortfolioSub').textContent = portSub;
   document.getElementById('dAgendaTopic').textContent = agenda.topic;
   document.getElementById('dAgendaDesc').textContent  = agenda.desc;
+
+  // Pre-fill request form auto fields
+  document.getElementById('rName').value     = nameCap;
+  document.getElementById('rPhone').value    = d.contact || 'Not registered';
+  document.getElementById('rCurrComm').value = committee;
+  document.getElementById('rCurrPort').value = portfolio;
 }
 
-/* ── ENTER KEY ─────────────────────────────── */
+// ── REQUEST FORM TOGGLE ───────────────────────────────────
+function toggleReqForm() {
+  const wrap = document.getElementById('reqFormWrap');
+  const btn  = document.getElementById('reqToggleBtn');
+  const isOpen = wrap.classList.contains('open');
+  if (isOpen) {
+    closeReqForm();
+  } else {
+    wrap.classList.add('open');
+    btn.classList.add('open');
+    btn.innerHTML = `
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      Close Form`;
+    // Scroll into view smoothly
+    setTimeout(() => {
+      document.getElementById('reqFormWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+  }
+}
+function closeReqForm() {
+  const wrap = document.getElementById('reqFormWrap');
+  const btn  = document.getElementById('reqToggleBtn');
+  wrap.classList.remove('open');
+  btn.classList.remove('open');
+  btn.innerHTML = `
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    Request for Change`;
+  // Reset fields
+  document.getElementById('rNewComm').value  = '';
+  document.getElementById('rNewPort').value  = '';
+  document.getElementById('rReason').value   = '';
+  document.getElementById('rPortErr').classList.remove('show');
+}
+
+// ── SUBMIT REQUEST → GOOGLE SHEETS ───────────────────────
+async function submitRequest() {
+  const newComm = document.getElementById('rNewComm').value.trim();
+  const newPort = document.getElementById('rNewPort').value.trim();
+  const reason  = document.getElementById('rReason').value.trim();
+  const errEl   = document.getElementById('rPortErr');
+  const statusEl = document.getElementById('reqStatus');
+  const submitBtn = document.getElementById('reqSubmitBtn');
+
+  // Validate — at least a new portfolio must be specified
+  if (!newPort) {
+    errEl.classList.add('show');
+    document.getElementById('rNewPort').classList.add('err');
+    return;
+  }
+  errEl.classList.remove('show');
+  document.getElementById('rNewPort').classList.remove('err');
+
+  // Check URL configured
+  if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    statusEl.className = 'req-status fail';
+    statusEl.textContent = '⚠️ Admin setup required: the Google Sheets connection has not been configured yet. Please contact the admin directly.';
+    return;
+  }
+
+  // Build payload
+  const payload = {
+    timestamp       : new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+    delegateName    : document.getElementById('rName').value,
+    phoneNumber     : document.getElementById('rPhone').value,
+    currentCommittee: document.getElementById('rCurrComm').value,
+    currentPortfolio: document.getElementById('rCurrPort').value,
+    preferredCommittee: newComm || 'No change',
+    preferredPortfolio: newPort,
+    reason          : reason || 'Not provided',
+    status          : 'Pending'
+  };
+
+  // Disable button, show loading
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting…';
+  statusEl.className = 'req-status';
+  statusEl.textContent = '';
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    // no-cors means we can't read the response, but if no error thrown it went through
+    statusEl.className = 'req-status success';
+    statusEl.textContent = '✓ Your request has been submitted successfully. The organising committee will review it and contact you if a change is approved. Please do not submit multiple requests.';
+    submitBtn.textContent = 'Request Submitted ✓';
+    // Disable form fields after success
+    document.getElementById('rNewComm').disabled = true;
+    document.getElementById('rNewPort').disabled = true;
+    document.getElementById('rReason').disabled  = true;
+  } catch (err) {
+    statusEl.className = 'req-status fail';
+    statusEl.textContent = '✗ Submission failed. Please check your internet connection and try again, or contact admin directly.';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit Request →';
+  }
+}
+
+// ── ENTER KEY ─────────────────────────────────────────────
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && document.getElementById('login').classList.contains('visible')) {
     doLogin();
