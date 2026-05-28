@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPSMUN 3.0 — Delegate Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dg:#0D2B1F;--mg:#114734;--bg:#1D9E75;
+  --gold:#D4AF37;--gl:#E0C889;--cream:#F5F0E8;--err:#e74c3c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Montserrat',sans-serif;background:var(--dg);color:var(--cream);}
+#app{position:relative;width:100%;height:100vh;overflow:hidden;}
+
+/* ── PAGE SLIDE TRANSITION ── */
+.screen{
+  position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+  transition:transform .56s cubic-bezier(.77,0,.18,1),opacity .4s ease;
+  will-change:transform,opacity;
+}
+.screen.hidden-right{transform:translateX(100%);opacity:0;pointer-events:none;}
+.screen.hidden-left {transform:translateX(-100%);opacity:0;pointer-events:none;}
+.screen.visible     {transform:translateX(0);opacity:1;pointer-events:all;}
+.screen::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse at 15% 40%,rgba(29,158,117,.07) 0%,transparent 55%),
+    radial-gradient(ellipse at 85% 20%,rgba(212,175,55,.05) 0%,transparent 50%);
+}
+
+/* ════════════════════════════════
+   LOGIN
+═══════════════════════════════════ */
+#login{background:var(--dg);}
+.login-wrap{min-height:100vh;display:flex;flex-direction:column;position:relative;z-index:5;}
+
+/* Header */
+.lh{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 48px;border-bottom:1px solid rgba(212,175,55,.18);
+  background:rgba(13,43,31,.88);backdrop-filter:blur(14px);
+  position:sticky;top:0;z-index:20;
+}
+.logo-row{display:flex;align-items:center;gap:14px;}
+.logo-circle{
+  width:44px;height:44px;border:1.5px solid var(--gold);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel',serif;font-size:10px;color:var(--gold);font-weight:700;
+  text-align:center;line-height:1.2;padding:3px;
+}
+.logo-name{font-family:'Cinzel',serif;font-size:13px;color:var(--gl);letter-spacing:2px;font-weight:600;line-height:1.35;}
+.logo-name span{display:block;font-size:10px;color:rgba(212,175,55,.5);letter-spacing:3px;}
+.hbadge{font-family:'Cinzel',serif;font-size:10px;color:var(--gold);letter-spacing:2px;
+  border:1px solid rgba(212,175,55,.28);padding:5px 14px;border-radius:2px;background:rgba(212,175,55,.04);}
+
+/* Two-col split */
+.lmain{flex:1;display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 76px);}
+
+/* Left — branding */
+.linfo{display:flex;flex-direction:column;justify-content:center;padding:60px 64px;position:relative;}
+.linfo::after{
+  content:'';position:absolute;right:0;top:8%;bottom:8%;width:1px;
+  background:linear-gradient(180deg,transparent,rgba(212,175,55,.3),transparent);
+}
+.etag{
+  display:inline-block;font-size:10px;font-weight:600;letter-spacing:4px;
+  text-transform:uppercase;color:var(--bg);border:1px solid rgba(29,158,117,.35);
+  padding:5px 14px;margin-bottom:26px;border-radius:2px;width:fit-content;
+}
+.etitle{
+  font-family:'Cinzel',serif;font-size:clamp(48px,5.5vw,76px);font-weight:900;
+  line-height:.92;letter-spacing:-1px;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gl) 40%,var(--gold) 70%,#b8860b 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:9px;
+}
+.esub{
+  font-family:'Cinzel',serif;font-size:clamp(10px,1vw,13px);letter-spacing:5px;
+  text-transform:uppercase;color:var(--gl);margin-bottom:28px;opacity:.82;
+}
+.ediv{width:56px;height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin-bottom:24px;}
+.edesc{
+  font-family:'Playfair Display',serif;font-style:italic;font-size:15px;
+  line-height:1.85;color:rgba(245,240,232,.7);max-width:400px;margin-bottom:32px;
+}
+.edesc strong{color:var(--gl);font-style:normal;}
+.estats{display:flex;gap:36px;}
+.stat-n{font-family:'Cinzel',serif;font-size:26px;font-weight:700;color:var(--gold);line-height:1;margin-bottom:3px;}
+.stat-l{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(245,240,232,.4);}
+
+/* Right — form */
+.lform-wrap{
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:60px 44px;background:rgba(17,71,52,.1);
+}
+.fcard{
+  width:100%;max-width:400px;
+  background:rgba(13,43,31,.75);border:1px solid rgba(212,175,55,.2);border-radius:4px;
+  padding:44px 40px;backdrop-filter:blur(24px);
+  box-shadow:0 30px 80px rgba(0,0,0,.44),inset 0 1px 0 rgba(212,175,55,.09);
+  position:relative;overflow:hidden;
+}
+.fcard::before{
+  content:'';position:absolute;top:0;left:20%;right:20%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.corner{position:absolute;width:18px;height:18px;border-color:rgba(212,175,55,.2);border-style:solid;}
+.c-tl{top:10px;left:10px;border-width:1px 0 0 1px;}
+.c-tr{top:10px;right:10px;border-width:1px 1px 0 0;}
+.c-bl{bottom:10px;left:10px;border-width:0 0 1px 1px;}
+.c-br{bottom:10px;right:10px;border-width:0 1px 1px 0;}
+
+.fh{text-align:center;margin-bottom:32px;}
+.fh h2{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--gl);letter-spacing:3px;text-transform:uppercase;margin-bottom:7px;}
+.fh p{font-size:10px;letter-spacing:1.5px;color:rgba(245,240,232,.38);text-transform:uppercase;}
+
+.fg{margin-bottom:20px;}
+.fg label{display:block;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-weight:600;}
+.fg input{
+  width:100%;background:rgba(245,240,232,.04);border:1px solid rgba(212,175,55,.22);
+  border-radius:2px;padding:13px 15px;color:var(--cream);font-family:'Montserrat',sans-serif;
+  font-size:14px;letter-spacing:.5px;transition:all .3s;outline:none;
+}
+.fg input:focus{border-color:var(--gold);background:rgba(212,175,55,.05);box-shadow:0 0 0 3px rgba(212,175,55,.07);}
+.fg input.err{border-color:var(--err);}
+.fg input::placeholder{color:rgba(245,240,232,.2);}
+
+.errmsg{font-size:10px;color:var(--err);margin-top:6px;letter-spacing:.4px;display:none;}
+.errmsg.show{display:block;}
+
+.lbtn{
+  width:100%;padding:14px;margin-top:6px;
+  background:linear-gradient(135deg,#b8860b 0%,var(--gold) 40%,var(--gl) 60%,var(--gold) 80%,#8b6914 100%);
+  border:none;border-radius:2px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;color:var(--dg);cursor:pointer;
+  transition:all .3s;position:relative;overflow:hidden;
+}
+.lbtn::after{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transition:left .4s;
+}
+.lbtn:hover::after{left:100%;}
+.lbtn:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(212,175,55,.28);}
+.fnote{text-align:center;margin-top:18px;font-size:10px;color:rgba(245,240,232,.28);letter-spacing:.8px;line-height:1.7;}
+.fnote a{color:rgba(212,175,55,.36);text-decoration:none;}
+
+/* ════════════════════════════════
+   DASHBOARD
+═══════════════════════════════════ */
+#dash{background:var(--dg);}
+.dash-wrap{min-height:100vh;position:relative;z-index:5;}
+
+.dn{
+  position:sticky;top:0;z-index:20;background:rgba(13,43,31,.96);
+  backdrop-filter:blur(18px);border-bottom:1px solid rgba(212,175,55,.18);
+  padding:13px 40px;display:flex;align-items:center;justify-content:space-between;
+}
+.dn-l{display:flex;align-items:center;gap:14px;}
+.dn-logo{font-family:'Cinzel',serif;font-size:15px;font-weight:700;color:var(--gold);letter-spacing:2px;}
+.dn-logo span{color:var(--gl);font-weight:400;font-size:12px;}
+.dn-sep{width:1px;height:18px;background:rgba(212,175,55,.28);}
+.dn-greet{font-size:11px;color:rgba(245,240,232,.52);letter-spacing:.4px;}
+.dn-greet strong{color:var(--gl);font-weight:600;}
+.back-btn{
+  font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(212,175,55,.6);background:transparent;border:1px solid rgba(212,175,55,.2);
+  padding:6px 15px;cursor:pointer;transition:all .3s;border-radius:2px;font-weight:600;
+}
+.back-btn:hover{color:var(--gold);border-color:var(--gold);background:rgba(212,175,55,.05);}
+
+.dc{max-width:1060px;margin:0 auto;padding:44px 36px;}
+
+/* Hero card */
+.dhero{
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:28px;
+  padding:36px 40px;background:rgba(17,71,52,.28);border:1px solid rgba(212,175,55,.18);
+  border-radius:4px;margin-bottom:28px;position:relative;overflow:hidden;
+}
+.dhero::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--gl),var(--gold),transparent);
+}
+.davatar{
+  width:72px;height:72px;border-radius:50%;border:2px solid var(--gold);flex-shrink:0;
+  background:linear-gradient(135deg,var(--mg),var(--bg));display:flex;align-items:center;
+  justify-content:center;font-family:'Cinzel',serif;font-size:24px;font-weight:700;color:var(--gold);
+  box-shadow:0 0 28px rgba(212,175,55,.14);
+}
+.dinfo h1{
+  font-family:'Cinzel',serif;font-size:clamp(18px,2.2vw,26px);font-weight:700;
+  color:var(--gl);letter-spacing:.8px;margin-bottom:5px;text-transform:capitalize;
+}
+.roletag{
+  display:inline-block;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--bg);
+  border:1px solid rgba(29,158,117,.32);padding:2px 10px;border-radius:20px;margin-bottom:6px;
+}
+.classinf{font-size:11px;color:rgba(245,240,232,.42);letter-spacing:.4px;}
+.hbadge-num .bl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,175,55,.4);margin-bottom:4px;}
+.hbadge-num .sno{font-family:'Cinzel',serif;font-size:38px;font-weight:900;color:rgba(212,175,55,.12);line-height:1;}
+
+/* 3-col contact cards */
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+.icard{
+  background:rgba(13,43,31,.6);border:1px solid rgba(212,175,55,.13);border-radius:4px;
+  padding:22px 24px;transition:border-color .3s;position:relative;overflow:hidden;
+}
+.icard:hover{border-color:rgba(212,175,55,.32);}
+.icard::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--bg),transparent);opacity:0;transition:opacity .3s;
+}
+.icard:hover::after{opacity:1;}
+.cico{width:30px;height:30px;margin-bottom:12px;opacity:.65;}
+.clabel{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:5px;font-weight:600;}
+.cval{font-family:'Cinzel',serif;font-size:13px;color:var(--cream);letter-spacing:.4px;line-height:1.5;}
+.cval.miss{color:rgba(245,240,232,.28);font-style:italic;font-family:'Playfair Display',serif;font-size:12px;}
+.cval a{color:var(--bg);text-decoration:none;font-size:12px;font-family:'Montserrat',sans-serif;word-break:break-all;}
+.cval a:hover{color:var(--gl);}
+
+/* Committee + Portfolio block */
+.cblock{
+  background:rgba(13,43,31,.6);border:1px solid rgba(212,175,55,.18);border-radius:4px;
+  padding:30px 34px;margin-bottom:24px;position:relative;overflow:hidden;
+}
+.cblock::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--gold),var(--gl),transparent);
+}
+.sec-title{
+  font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:3px;
+  text-transform:uppercase;color:var(--gold);margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;
+}
+.sec-title::after{content:'';flex:1;height:1px;background:rgba(212,175,55,.18);}
+
+/* The two split columns */
+.assign-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+  border:1px solid rgba(29,158,117,.2);border-radius:3px;overflow:hidden;
+}
+.assign-col{padding:24px 26px;}
+.assign-col:first-child{
+  border-right:1px solid rgba(29,158,117,.2);
+  background:rgba(29,158,117,.06);
+}
+.assign-col:last-child{background:rgba(212,175,55,.04);}
+.assign-label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;margin-bottom:10px;}
+.assign-col:first-child .assign-label{color:var(--bg);}
+.assign-col:last-child  .assign-label{color:var(--gold);}
+.assign-value{font-family:'Cinzel',serif;font-size:21px;font-weight:700;line-height:1.25;letter-spacing:.4px;}
+.assign-col:first-child .assign-value{color:var(--gl);}
+.assign-col:last-child  .assign-value{color:var(--cream);}
+.assign-sub{font-size:10px;margin-top:5px;letter-spacing:.3px;color:rgba(245,240,232,.36);}
+
+/* Agenda block */
+.ablock{
+  background:rgba(13,43,31,.6);border:1px solid rgba(212,175,55,.18);border-radius:4px;
+  padding:30px 34px;margin-bottom:28px;position:relative;overflow:hidden;
+}
+.ablock::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--gl),transparent);
+}
+.atopic{
+  display:inline-block;font-family:'Cinzel',serif;font-size:13px;font-weight:600;
+  color:var(--gl);background:rgba(212,175,55,.07);border:1px solid rgba(212,175,55,.18);
+  padding:7px 16px;border-radius:2px;margin-bottom:14px;letter-spacing:.4px;
+}
+.adesc{
+  font-family:'Playfair Display',serif;font-style:italic;font-size:14px;
+  line-height:1.9;color:rgba(245,240,232,.65);max-width:680px;margin-bottom:18px;
+}
+.acta{
+  display:inline-flex;align-items:center;gap:9px;font-family:'Cinzel',serif;font-size:10px;
+  font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--dg);
+  background:linear-gradient(135deg,var(--gold),var(--gl));padding:11px 24px;border-radius:2px;
+  text-decoration:none;transition:all .3s;box-shadow:0 4px 18px rgba(212,175,55,.18);
+}
+.acta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(212,175,55,.28);}
+
+/* Footer */
+.dfooter{text-align:center;padding:26px;border-top:1px solid rgba(212,175,55,.08);margin-top:8px;}
+.dfooter p{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(245,240,232,.2);}
+.gline{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);width:100px;margin:8px auto;}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.fu {animation:fadeUp .5s ease both;}
+.fu1{animation:fadeUp .5s .07s ease both;opacity:0;}
+.fu2{animation:fadeUp .5s .14s ease both;opacity:0;}
+.fu3{animation:fadeUp .5s .21s ease both;opacity:0;}
+.fu4{animation:fadeUp .5s .28s ease both;opacity:0;}
+
+/* Responsive */
+@media(max-width:900px){
+  .cgrid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:768px){
+  .lmain{grid-template-columns:1fr;}
+  .linfo{display:none;}
+  .lform-wrap{padding:28px 20px;min-height:calc(100vh - 76px);}
+  .fcard{padding:30px 22px;}
+  .lh{padding:14px 20px;}
+  .assign-grid{grid-template-columns:1fr;}
+  .assign-col:first-child{border-right:none;border-bottom:1px solid rgba(29,158,117,.2);}
+  .cgrid{grid-template-columns:1fr;}
+  .dhero{grid-template-columns:auto 1fr;}
+  .hbadge-num{display:none;}
+  .dc{padding:20px 16px;}
+  .dn{padding:11px 18px;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ══════════════ LOGIN PAGE ══════════════ -->
+<div id="login" class="screen visible">
+<div class="login-wrap">
+
+  <header class="lh">
+    <div class="logo-row">
+      <div class="logo-circle">SPS<br>MUN</div>
+      <div class="logo-name">Satluj Public School<span>Panchkula · Sector 4</span></div>
+    </div>
+    <div class="hbadge">✦ Delegate Portal ✦</div>
+  </header>
+
+  <div class="lmain">
+    <div class="linfo">
+      <div class="etag fu">✦ A Decade of Diplomacy ✦</div>
+      <h1 class="etitle fu1">SPSMUN<br>3.0</h1>
+      <p class="esub fu1">The Era of Impact</p>
+      <div class="ediv fu2"></div>
+      <p class="edesc fu2">
+        Satluj Public School proudly presents <strong>SPSMUN 3.0</strong> — our grandest Model United Nations conference yet. A decade of nurturing young diplomats, a future of <strong>global change</strong>. Be heard. Make an impact. Change tomorrow.
+      </p>
+      <div class="estats fu3">
+        <div><div class="stat-n">170+</div><div class="stat-l">Delegates</div></div>
+        <div><div class="stat-n">10+</div><div class="stat-l">Committees</div></div>
+        <div><div class="stat-n">3rd</div><div class="stat-l">Edition</div></div>
+      </div>
+    </div>
+
+    <div class="lform-wrap">
+      <div class="fcard fu2">
+        <div class="corner c-tl"></div><div class="corner c-tr"></div>
+        <div class="corner c-bl"></div><div class="corner c-br"></div>
+        <div class="fh">
+          <h2>Delegate Login</h2>
+          <p>Enter your phone number or email ID</p>
+        </div>
+        <div class="fg">
+          <label>Phone Number or Email Address</label>
+          <input type="text" id="credInput"
+            placeholder="e.g.  9876543210  or  you@email.com"
+            autocomplete="off" autofocus>
+          <div class="errmsg" id="credErr">
+            No delegate found. Please check and try again, or contact admin.
+          </div>
+        </div>
+        <button class="lbtn" onclick="doLogin()">Access My Dashboard →</button>
+        <div class="fnote">
+          SPSMUN 3.0 · Satluj Public School, Panchkula<br>
+          <a href="https://satlujmun.com" target="_blank">satlujmun.com</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════ DASHBOARD PAGE ══════════════ -->
+<div id="dash" class="screen hidden-right">
+<div class="dash-wrap">
+
+  <nav class="dn">
+    <div class="dn-l">
+      <div class="dn-logo">SPSMUN <span>3.0</span></div>
+      <div class="dn-sep"></div>
+      <div class="dn-greet">Welcome, <strong id="navName">Delegate</strong></div>
+    </div>
+    <button class="back-btn" onclick="goBack()">← Back to Login</button>
+  </nav>
+
+  <div class="dc">
+
+    <!-- Hero -->
+    <div class="dhero fu">
+      <div class="davatar" id="avatarEl">D</div>
+      <div class="dinfo">
+        <div class="roletag">✦ Confirmed Delegate</div>
+        <h1 id="dName">—</h1>
+        <div class="classinf" id="dClassSec">—</div>
+      </div>
+      <div class="hbadge-num">
+        <div class="bl">Delegate No.</div>
+        <div class="sno" id="dSno">—</div>
+      </div>
+    </div>
+
+    <!-- Contact cards -->
+    <div class="cgrid">
+      <div class="icard fu1">
+        <svg class="cico" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="15" r="14" stroke="#D4AF37" stroke-width="1" opacity=".4"/>
+          <path d="M10 13c0-2.76 2.24-5 5-5s5 2.24 5 5c0 3.5-5 8.5-5 8.5S10 16.5 10 13z" stroke="#D4AF37" stroke-width="1.2" fill="none"/>
+          <circle cx="15" cy="13" r="2" stroke="#D4AF37" stroke-width="1.2" fill="none"/>
+        </svg>
+        <div class="clabel">Phone Number</div>
+        <div class="cval" id="dPhone">—</div>
+      </div>
+      <div class="icard fu2">
+        <svg class="cico" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="15" r="14" stroke="#D4AF37" stroke-width="1" opacity=".4"/>
+          <rect x="6" y="10" width="18" height="12" rx="1.5" stroke="#D4AF37" stroke-width="1.2" fill="none"/>
+          <path d="M6 12l9 5.5 9-5.5" stroke="#D4AF37" stroke-width="1.2"/>
+        </svg>
+        <div class="clabel">Email Address</div>
+        <div class="cval" id="dEmail">—</div>
+      </div>
+      <div class="icard fu3">
+        <svg class="cico" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="15" r="14" stroke="#D4AF37" stroke-width="1" opacity=".4"/>
+          <rect x="8" y="7" width="14" height="17" rx="1.5" stroke="#D4AF37" stroke-width="1.2" fill="none"/>
+          <path d="M11 12h8M11 16h8M11 20h5" stroke="#D4AF37" stroke-width="1"/>
+        </svg>
+        <div class="clabel">Class & Section</div>
+        <div class="cval" id="dClass">—</div>
+      </div>
+    </div>
+
+    <!-- Committee & Portfolio — two distinct columns -->
+    <div class="cblock fu2">
+      <div class="sec-title">✦ Committee & Portfolio Assignment</div>
+      <div class="assign-grid">
+        <div class="assign-col">
+          <div class="assign-label">Committee</div>
+          <div class="assign-value" id="dComm">—</div>
+          <div class="assign-sub" id="dCommFull">—</div>
+        </div>
+        <div class="assign-col">
+          <div class="assign-label">Portfolio</div>
+          <div class="assign-value" id="dPortfolio">—</div>
+          <div class="assign-sub" id="dPortfolioSub">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agenda -->
+    <div class="ablock fu3">
+      <div class="sec-title">✦ Agenda & Preparation</div>
+      <div class="atopic" id="dAgendaTopic">—</div>
+      <p class="adesc" id="dAgendaDesc">—</p>
+      <a href="https://satlujmun.com" target="_blank" class="acta">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+          <path d="M6.5 1a5.5 5.5 0 100 11A5.5 5.5 0 006.5 1zM1.5 6.5h10M6.5 1.5C5 3 4 4.6 4 6.5s1 3.5 2.5 5M6.5 1.5C8 3 9 4.6 9 6.5s-1 3.5-2.5 5"
+            stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+        </svg>
+        Visit satlujmun.com for full resources
+      </a>
+    </div>
+
+    <div class="dfooter">
+      <div class="gline"></div>
+      <p>SPSMUN 3.0 · Satluj Public School, Sector 4, Panchkula · The Era of Impact</p>
+      <div class="gline"></div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+</div><!-- #app -->
+<script>
+const DELEGATES = [
+  {"sno": "1", "name": "Ansh", "class": "5th", "section": "Sweeticia", "committee": "UNCSW", "portfolio": "Turkiye", "contact": "+91 8437609948", "email": "sadhanaprajapati84364@gmail.com"},
+  {"sno": "2", "name": "Japleen Kaur", "class": "7th", "section": "Gladiolus", "committee": "WHO Beginners", "portfolio": "Colombia", "contact": "+91 7567125125", "email": "arshpreet.mini@gmail.com"},
+  {"sno": "3", "name": "Prathamesh Verma", "class": "10th", "section": "Frost", "committee": "WHO", "portfolio": "Sudan", "contact": "+91 7404227950", "email": "Prathameshverma.2010@gmail.com"},
+  {"sno": "4", "name": "Yash Dhiman", "class": "10th", "section": "Frost", "committee": "UNSC", "portfolio": "Latvia", "contact": "+91 7988639832", "email": "Yashxrynx@gmail.com"},
+  {"sno": "5", "name": "Viraj Goswami", "class": "9th", "section": "TS Eliot", "committee": "AIPPM", "portfolio": "Pankaj Kr Gupta", "contact": "+91 9996770054", "email": "Rajnigoswami004646@gmail.com"},
+  {"sno": "6", "name": "Marvi Nagpal", "class": "5th", "section": "Sweeticia", "committee": "WHO", "portfolio": "Nepal", "contact": "+91 9857758901", "email": ""},
+  {"sno": "7", "name": "Akul Atri", "class": "9th", "section": "Shakespeare", "committee": "WHO", "portfolio": "Newzealand", "contact": "+91 7696066624", "email": "akulatri5@gmail.com"},
+  {"sno": "8", "name": "Shivam Gupta", "class": "8th", "section": "Iris", "committee": "IP", "portfolio": "Caricature", "contact": "+91 9877786395", "email": "Writepankajgupta@gmail.com"},
+  {"sno": "9", "name": "Khyati Bisht", "class": "9th", "section": "Blake", "committee": "UNGA", "portfolio": "Brazil", "contact": "", "email": ""},
+  {"sno": "10", "name": "Shreeya Sharma", "class": "9th", "section": "TS Eliot", "committee": "UNSC", "portfolio": "Bahrain", "contact": "+91 7807320811", "email": ""},
+  {"sno": "11", "name": "Nipun Gaur", "class": "9th", "section": "Shelly", "committee": "UNGA", "portfolio": "Slovenia", "contact": "+91 9991511055", "email": "nipungaur2012@gmail.com"},
+  {"sno": "12", "name": "Pihu", "class": "7th", "section": "Dahlia", "committee": "WHO", "portfolio": "Austria", "contact": "+91 9416376023", "email": "richasharma.noida@gmail.com"},
+  {"sno": "13", "name": "Banveer Singh", "class": "9th", "section": "Austen", "committee": "IP", "portfolio": "Photography", "contact": "+91 8194949485", "email": "malkeet.saini2484@gmail.com"},
+  {"sno": "14", "name": "Niharika Sharma", "class": "9th", "section": "TS Eliot", "committee": "UNGA", "portfolio": "Hungary", "contact": "+91 8427492918", "email": "Naetheweeb@gmail.com"},
+  {"sno": "15", "name": "Vania Rana", "class": "9th", "section": "TS Eliot", "committee": "UNGA", "portfolio": "Ethiopia", "contact": "+91 9872795032", "email": "Poojaparv@yahoo.com"},
+  {"sno": "16", "name": "Harman Sharma", "class": "9th", "section": "Shelly", "committee": "IP", "portfolio": "Photography", "contact": "+91 9467239753", "email": "Harmasharma14577@gmail.com"},
+  {"sno": "17", "name": "Saanvi", "class": "9th", "section": "John Donne", "committee": "UNHRC", "portfolio": "Morocco", "contact": "+91 9464705131", "email": "Thakur_shilpa@yahoo.com"},
+  {"sno": "18", "name": "Bhavya Sharma", "class": "9th", "section": "Shakespeare", "committee": "UNHRC", "portfolio": "Sweden", "contact": "+91 7988787180", "email": "bs167575@gmail.com"},
+  {"sno": "19", "name": "Vanya Tyagi", "class": "10th", "section": "Ruskin Bond", "committee": "UNGA", "portfolio": "Mexico", "contact": "+91 9718591957", "email": "vaanyatyagii@gmail.com"},
+  {"sno": "20", "name": "Abhijot Singh", "class": "9th", "section": "O Henry", "committee": "IP", "portfolio": "Journalism", "contact": "+91 8427457182", "email": "sarabjeet5121989@gmail.com"},
+  {"sno": "21", "name": "Arpit Srivastava", "class": "9th", "section": "Blake", "committee": "UNGA", "portfolio": "Germany", "contact": "+91 7986431393", "email": "Arpit26062011@gmail.com"},
+  {"sno": "22", "name": "Krishit Singroha", "class": "9th", "section": "Blake", "committee": "UNGA", "portfolio": "Netherlands", "contact": "+91 8437302494", "email": "Krishitsinghroha@gmail.com"},
+  {"sno": "23", "name": "Aarab Bir", "class": "10th", "section": "Frost", "committee": "UNGA", "portfolio": "Sweden", "contact": "+91 9316599266", "email": "bishtmayuri25@gmail.com"},
+  {"sno": "24", "name": "Pulkit Singh", "class": "9th", "section": "Shelly", "committee": "UNGA", "portfolio": "Serbia", "contact": "+91 7719614502", "email": "singhpulkit779@gmail.com"},
+  {"sno": "25", "name": "Aarav Garg", "class": "7th", "section": "Jasmine", "committee": "WHO Beginners", "portfolio": "Ghana", "contact": "+91 8872481413", "email": ""},
+  {"sno": "26", "name": "Aishra Gupta", "class": "7th", "section": "Jasmine", "committee": "WHO Beginners", "portfolio": "Yemen", "contact": "+91 9454566153", "email": "palak6june@gmail.com"},
+  {"sno": "27", "name": "Siyona Bharwaj", "class": "6th", "section": "Freesia", "committee": "WHO Beginners", "portfolio": "Jamaica", "contact": "+91 8351049760", "email": ""},
+  {"sno": "28", "name": "Vamika Gupta", "class": "7th", "section": "Primrose", "committee": "IP", "portfolio": "Photography", "contact": "+91 7988203324", "email": "harrypandit4560@gamil.com"},
+  {"sno": "30", "name": "Chirag", "class": "9th", "section": "Lawrence", "committee": "UNSC", "portfolio": "Colombia", "contact": "+91 8360605816", "email": "rajji0027541@gmail.com"},
+  {"sno": "31", "name": "Ansh Rana", "class": "9th", "section": "Shelly", "committee": "IP", "portfolio": "Photography", "contact": "+91 9729460539", "email": "Ashishrana50157@gmail.com"},
+  {"sno": "32", "name": "Abhay Sharma", "class": "8th", "section": "Florentia", "committee": "IP", "portfolio": "Photography", "contact": "+91 9468001800", "email": "Harrypandit4560@gmail.com"},
+  {"sno": "33", "name": "Tanmay Gautam", "class": "9th", "section": "Austen", "committee": "IPL", "portfolio": "Punjab Kings", "contact": "+91 8289008191", "email": "sharmarg0999@gmail.com"},
+  {"sno": "34", "name": "Angel", "class": "9th", "section": "Austen", "committee": "UNGA", "portfolio": "Tajikistan", "contact": "+91 8295489180", "email": "anujsharmag321@gmail.com"},
+  {"sno": "35", "name": "Divyansh Chauhan", "class": "9th", "section": "John Donne", "committee": "UNGA", "portfolio": "Argentina", "contact": "+91 9996326606", "email": "Santul.chauhan3111@gmail.com"},
+  {"sno": "36", "name": "Urmi", "class": "9th", "section": "Kipling", "committee": "UNGA", "portfolio": "Luxembourg", "contact": "+91 9690011275", "email": "beenu1234@gmail.com"},
+  {"sno": "37", "name": "Digvijay Sinver", "class": "9th", "section": "Austen", "committee": "IP", "portfolio": "Photography", "contact": "+91 8398000100", "email": "ravindersinver@gmail.com"},
+  {"sno": "38", "name": "Ayushman", "class": "6th", "section": "Hyacinth", "committee": "UNGA", "portfolio": "Somalia", "contact": "+91 9452294523", "email": "sprakash.rai9@gmail.com"},
+  {"sno": "39", "name": "Gurnoor", "class": "9th", "section": "John Donne", "committee": "UNHRC", "portfolio": "Algeria", "contact": "+91 8847442489", "email": "gurayagurnoor535@gmail.com"},
+  {"sno": "40", "name": "Sarvagya", "class": "9th", "section": "Kipling", "committee": "UNCSW", "portfolio": "Japan", "contact": "+91 7982759154", "email": "sarvagya213@gmail.com"},
+  {"sno": "42", "name": "Digvi Chopra", "class": "6th", "section": "Hyacinth", "committee": "UNGA", "portfolio": "Yemen", "contact": "+91 8901370320", "email": "rajnigohri@gmail.com"},
+  {"sno": "43", "name": "Manvi", "class": "6th", "section": "Hyacinth", "committee": "UNGA", "portfolio": "Romania", "contact": "+91 9646699777", "email": "hindsouthlogestics@gmail.com"},
+  {"sno": "44", "name": "Kanishka Sood", "class": "9th", "section": "Kipling", "committee": "UNCSW", "portfolio": "Peru", "contact": "+91 8285952410", "email": "Officialkanishka2013@gmail.com"},
+  {"sno": "45", "name": "Kanishka", "class": "7th", "section": "Dhalia", "committee": "WHO Beginners", "portfolio": "Cuba", "contact": "+91 8901355553", "email": "dahiyabalwinder@gmail.com"},
+  {"sno": "46", "name": "Abhimanyu", "class": "7th", "section": "Dhalia", "committee": "WHO Beginners", "portfolio": "Cyprus", "contact": "+91 9582416700", "email": "rajan2010@gmail.com"},
+  {"sno": "47", "name": "Aradhya", "class": "7th", "section": "Dhalia", "committee": "WHO Beginners", "portfolio": "Myanmar", "contact": "+91 9318037982", "email": "Udaybaddi09@gmail.com"},
+  {"sno": "48", "name": "Yohaan Jassi", "class": "7th", "section": "Azalea", "committee": "WHO Beginners", "portfolio": "Malta", "contact": "+91 8288888131", "email": "sandeepjassi777@gamil.com"},
+  {"sno": "49", "name": "Suryansh Pal", "class": "7th", "section": "Gladiolus", "committee": "UNGA", "portfolio": "Bahrain", "contact": "+91 9041164076", "email": "Snehamannu15@gmail.com"},
+  {"sno": "50", "name": "Gauri Verma", "class": "9th", "section": "Kipling", "committee": "UNCSW", "portfolio": "Mauritius", "contact": "+91 6283872134", "email": "agrr1952@gmail.com"},
+  {"sno": "52", "name": "Aayan Kalotra", "class": "7th", "section": "Aster", "committee": "WHO Beginners", "portfolio": "Combodia", "contact": "+91 9646767650", "email": ""},
+  {"sno": "53", "name": "Prakhar Gautam", "class": "9th", "section": "Shakespeare", "committee": "UNSC", "portfolio": "Russian Federation", "contact": "+91 7049977318", "email": "Navyagautam@gmail.com"},
+  {"sno": "54", "name": "Manya Khokhar", "class": "9th", "section": "Kipling", "committee": "UNCSW", "portfolio": "Belarus", "contact": "+91 9999919157", "email": "mehra.deepika@gmail.com"},
+  {"sno": "55", "name": "Sakshi", "class": "9th", "section": "Austen", "committee": "UNCSW", "portfolio": "Mexico", "contact": "+91 7986555165", "email": "sakshi.kashyap12@icloud.com"},
+  {"sno": "56", "name": "Manyata", "class": "9th", "section": "Austen", "committee": "UNCSW", "portfolio": "Kiribati", "contact": "+91 6280845239", "email": "bansalmamta538@gmail.com"},
+  {"sno": "58", "name": "Anaya", "class": "10th", "section": "Chaucer", "committee": "IP", "portfolio": "Journalism", "contact": "+91 9896553126", "email": "Koli.ajay@gmail.com"},
+  {"sno": "59", "name": "Bhoumik Rathee", "class": "10th", "section": "Frost", "committee": "UNHRC", "portfolio": "Norway", "contact": "+91 9876043402", "email": "bhoumikrathee29062010@gmail.com"},
+  {"sno": "60", "name": "Veohm Sharma", "class": "6th", "section": "Crocus", "committee": "WHO Beginners", "portfolio": "Mozambique", "contact": "+91 8837644575", "email": "sharmaveohm@gmail.com"},
+  {"sno": "61", "name": "Vansh Goyal", "class": "7th", "section": "Jasmine", "committee": "WHO Beginners", "portfolio": "India", "contact": "905110538", "email": ""},
+  {"sno": "62", "name": "Harshvardhan", "class": "7th", "section": "Azalea", "committee": "WHO Beginners", "portfolio": "Ukraine", "contact": "+91 9805175945", "email": "priyankanegi727@gmail.com"},
+  {"sno": "63", "name": "Jasmine", "class": "10th", "section": "Whitman", "committee": "UNHRC", "portfolio": "Kuwait", "contact": "+91 8437843811", "email": "jasminechhikara2223@gmail.com"},
+  {"sno": "64", "name": "Nipun Gupta", "class": "8th", "section": "Orchid", "committee": "WHO Beginners", "portfolio": "Paraguay", "contact": "+91 9876832120", "email": "nipungupta09122012@gmail.com"},
+  {"sno": "65", "name": "Trisha Bansal", "class": "7th", "section": "Dahlia", "committee": "WHO Beginners", "portfolio": "Brazil", "contact": "+91 9416344616", "email": "Ravitagarg@gmail.com"},
+  {"sno": "66", "name": "Mansi Arora", "class": "7th", "section": "Jasmine", "committee": "WHO Beginners", "portfolio": "Greece", "contact": "+91 7658038126", "email": "mansiaroraa2611@gmail.com"},
+  {"sno": "67", "name": "Vaanya Sharma", "class": "7th", "section": "Jasmine", "committee": "WHO Beginners", "portfolio": "Guyana", "contact": "+91 9999631641", "email": "nikita1809.ns@gmail.com"},
+  {"sno": "70", "name": "Shreya", "class": "8th", "section": "Marigold", "committee": "UNGA", "portfolio": "Morocco", "contact": "+91 9466392254", "email": "guribwl@gmail.com"},
+  {"sno": "71", "name": "Ashwina", "class": "8th", "section": "Marigold", "committee": "WHO Beginners", "portfolio": "Indonesia", "contact": "+91 9915031236", "email": "babitadotgusain@gmail.com"},
+  {"sno": "72", "name": "Vritika Sharma", "class": "9th", "section": "", "committee": "UNGA", "portfolio": "Kazakhstan", "contact": "+91 8629002028", "email": "priyankarani1385@gmail.com"},
+  {"sno": "73", "name": "Yuvraj Lakhawat", "class": "9th", "section": "Blake", "committee": "UNGA", "portfolio": "Norway", "contact": "+91 9799997809", "email": "Yuvrajlakhawat1@gmail.com"},
+  {"sno": "74", "name": "Devan Poonia", "class": "8th", "section": "Iris", "committee": "IPL", "portfolio": "Csk", "contact": "", "email": ""},
+  {"sno": "75", "name": "Savya Saini", "class": "7th", "section": "Primrose", "committee": "WHO Beginners", "portfolio": "Kenya", "contact": "+91 9876745251", "email": "sush1908@gmail.com"},
+  {"sno": "76", "name": "Peerdiyal Jatt", "class": "8th", "section": "Florentina", "committee": "IP", "portfolio": "Photography", "contact": "+91 8571838634", "email": "tiwanapeerdiyal@gmail.com"},
+  {"sno": "77", "name": "Aditya Samyal", "class": "10th", "section": "Ruskin Bond", "committee": "UNHRC", "portfolio": "Austria", "contact": "+91 9056459688", "email": "harshusamyal@gmail.com"},
+  {"sno": "79", "name": "Wahpreet", "class": "9th", "section": "Shelly", "committee": "UNGA", "portfolio": "Fiji", "contact": "+91 7015311411", "email": "Wahpreet45@gmail.com"},
+  {"sno": "80", "name": "Mannat Kumar", "class": "8th", "section": "Magnolia", "committee": "WHO Beginners", "portfolio": "Bahrain", "contact": "+91 7888638708", "email": "rinku777@gmail.com"},
+  {"sno": "81", "name": "Tischa Sharma", "class": "7th", "section": "Begonia", "committee": "UNCSW", "portfolio": "Yemen", "contact": "+91 7807320819", "email": "queenshivani1984@gmail.com"},
+  {"sno": "82", "name": "Riyansh Banga", "class": "7th", "section": "Dahlia", "committee": "WHO Beginners", "portfolio": "Poland", "contact": "+91 8376053294", "email": ""},
+  {"sno": "83", "name": "Akanksha", "class": "11th", "section": "Newton", "committee": "UNCSW", "portfolio": "Finland", "contact": "+91 9518401511", "email": ""},
+  {"sno": "84", "name": "Lakshika Goonta", "class": "11th", "section": "Newton", "committee": "UNCSW", "portfolio": "New Zealand", "contact": "+91 7807607730", "email": "lakshikagoonta9@gmail.com"},
+  {"sno": "85", "name": "Jaspreet", "class": "9th", "section": "Lawrence", "committee": "UNCSW", "portfolio": "Venezuela", "contact": "+91 8287386873", "email": "jaspteetkaur1506@gmail.com"},
+  {"sno": "87", "name": "Sarthak Vashisht", "class": "8th", "section": "Lavender", "committee": "UNHRC", "portfolio": "Peru", "contact": "+91 7986317993", "email": "vashishts207@gmail.com"},
+  {"sno": "88", "name": "Jasmeet Kaur", "class": "8th", "section": "Hibiscus", "committee": "UNCSW", "portfolio": "Sweden", "contact": "+91 8130823926", "email": "seemarbhatia445@gmail.com"},
+  {"sno": "91", "name": "Mannat Negi", "class": "8th", "section": "Rosemary", "committee": "IPL", "portfolio": "Mi", "contact": "+91 9855557834", "email": "tajnegi4848@gmail.com"},
+  {"sno": "92", "name": "Aryan", "class": "11th", "section": "Kotler", "committee": "IP", "portfolio": "Journalism", "contact": "+91 7082585208", "email": "pardhanaryan45@gmail.com"},
+  {"sno": "93", "name": "Ankit Kashyap", "class": "9th", "section": "Tennyson", "committee": "UNHRC", "portfolio": "Jamaica", "contact": "+91 7696831819", "email": "ankit.harsh.kashyap@gmail.com"},
+  {"sno": "94", "name": "Arpit Kashyap", "class": "9th", "section": "Tennyson", "committee": "UNSC", "portfolio": "Somalia", "contact": "+91 9815071819", "email": "arpitkashyap.8540@gmail.com"},
+  {"sno": "95", "name": "Maulik Juneja", "class": "6th", "section": "Hyacinth", "committee": "UNGA", "portfolio": "Monaco", "contact": "+91 9958834646", "email": "Monikas@gmail.com"},
+  {"sno": "96", "name": "Divyanka Nanda", "class": "8th", "section": "Heather", "committee": "WHO Beginners", "portfolio": "Bolivia", "contact": "+91 8558871998", "email": "priyanka.nanda20@gmail.com"},
+  {"sno": "97", "name": "Harshita Kaur", "class": "8th", "section": "Heather", "committee": "WHO Beginners", "portfolio": "Canada", "contact": "+91 9882145000", "email": "vinodkumar@gmail.com"},
+  {"sno": "98", "name": "Manan Garg", "class": "9th", "section": "T.S Eliot", "committee": "IPL", "portfolio": "Rr", "contact": "+91 7696466810", "email": "anugupta50912@gmail.com"},
+  {"sno": "99", "name": "Mishti Bhardwaj", "class": "11th", "section": "Kalpana", "committee": "UNCSW", "portfolio": "Mali", "contact": "+91 6378300241", "email": "Ektabashisth@gmail.com"},
+  {"sno": "100", "name": "Avishka Gupta", "class": "8th", "section": "Lavender", "committee": "UNGA", "portfolio": "Singapore", "contact": "+91 9829064043", "email": "avitakhawas@gmail.com"},
+  {"sno": "101", "name": "Amyra Chaddha", "class": "7th", "section": "Aster", "committee": "WHO Beginners", "portfolio": "Liberia", "contact": "+91 9501294255", "email": "ushasharma.tech@gamil.com"},
+  {"sno": "102", "name": "Veronica Chopra", "class": "8th", "section": "Hibiscus", "committee": "UNCSW", "portfolio": "Ethopia", "contact": "+91 9996515833", "email": "Drsachinchopravet@gmail.com"},
+  {"sno": "103", "name": "Aditi Sharma", "class": "8th", "section": "Magnolia", "committee": "WHO Beginners", "portfolio": "Germany", "contact": "+91 9459695106", "email": "ghanshyam1072@gmail.com"},
+  {"sno": "104", "name": "Shivang", "class": "8th", "section": "Magnolia", "committee": "UNGA", "portfolio": "Bolivia", "contact": "+91 9316467209", "email": "shivang6790@gmail.com"},
+  {"sno": "105", "name": "Tanzil Bhargav", "class": "6th", "section": "Hyacinth", "committee": "UNGA", "portfolio": "Latvia", "contact": "+91 9812343570", "email": "suneet.bhargav@gmail.com"},
+  {"sno": "108", "name": "Pari Yadav", "class": "8th", "section": "Hibiscus", "committee": "UNGA", "portfolio": "Ireland", "contact": "+91 8837632078", "email": "pariyats1111@gmail.com"},
+  {"sno": "110", "name": "Jenica Kaur", "class": "8th", "section": "Hibiscus", "committee": "UNCSW", "portfolio": "Estonia", "contact": "+91 9896876432", "email": "psroodal@gmail.com"},
+  {"sno": "111", "name": "Palak Mittal", "class": "11th", "section": "Keynes", "committee": "UNCSW", "portfolio": "Latvia", "contact": "+91 9876529423", "email": "Palakmittal410@gmail.com"},
+  {"sno": "112", "name": "Charvi Arora", "class": "8th", "section": "Daffodils", "committee": "WHO Beginners", "portfolio": "Iceland", "contact": "+91 9216476211", "email": "Aroracharvi@gmail.com"},
+  {"sno": "113", "name": "Kanika Malik", "class": "8th", "section": "Hibiscus", "committee": "UNCSW", "portfolio": "Guinea", "contact": "+91 9218559678", "email": "dhirajmalik82@gmail.com"},
+  {"sno": "114", "name": "Aarav Lakhanpal", "class": "8th", "section": "Rosemary", "committee": "WHO Beginners", "portfolio": "Panama", "contact": "+91 7973278106", "email": "Aaravlakhanpal02@gmail.com"},
+  {"sno": "115", "name": "Rudra Raj", "class": "8th", "section": "Iris", "committee": "UNGA", "portfolio": "Luxembourg", "contact": "+91 8800922224", "email": "rudra901@gmail.com"},
+  {"sno": "116", "name": "Ayushi valiyam", "class": "9th", "section": "Austen", "committee": "UNGA", "portfolio": "Iraq", "contact": "+91 9456423444", "email": "ayushi.akki1987@gmail.com"},
+  {"sno": "117", "name": "Ananya Bharti", "class": "10th", "section": "Chaucer", "committee": "UNCSW", "portfolio": "Bolivia", "contact": "+91 9056292556", "email": "Harishrawat819@gmail.com"},
+  {"sno": "118", "name": "Shanvi Soni", "class": "10th", "section": "Chaucer", "committee": "UNSC", "portfolio": "Democratic Republic Of The Congo", "contact": "+91 7015845962", "email": ""},
+  {"sno": "119", "name": "Pranshi Gandotra", "class": "9th", "section": "Tennyson", "committee": "UNHRC", "portfolio": "Cuba", "contact": "+91 9991710803", "email": ""},
+  {"sno": "120", "name": "Aditya Gupta", "class": "8th", "section": "Marigold", "committee": "WHO Beginners", "portfolio": "Uganda", "contact": "+91 9041883170", "email": "shilpayashu@gmail.com"},
+  {"sno": "121", "name": "Himanshi Thakur", "class": "8th", "section": "Heather", "committee": "UNGA", "portfolio": "Peru", "contact": "+91 7009349061", "email": "Vinaythakur1998@icloud.com"},
+  {"sno": "122", "name": "Mahi Lather", "class": "8th", "section": "Heather", "committee": "UNGA", "portfolio": "Jamaica", "contact": "+91 7009634349", "email": "mahilather100@gmail.com"},
+  {"sno": "123", "name": "Vedanshi Ahuja", "class": "8th", "section": "Heather", "committee": "WHO Beginners", "portfolio": "Croatia", "contact": "+91 9592087676", "email": "shagun25apr@gmail.com"},
+  {"sno": "124", "name": "Ishaan Kashyap", "class": "7th", "section": "Clover", "committee": "UNCSW", "portfolio": "Greece", "contact": "", "email": "Minikashyap1321@gmail.com"},
+  {"sno": "125", "name": "Mahi Kashyap", "class": "7th", "section": "Clover", "committee": "UNCSW", "portfolio": "Jordan", "contact": "", "email": "meenadevi18540@gmail.com"},
+  {"sno": "126", "name": "Taniya", "class": "7th", "section": "Clover", "committee": "UNCSW", "portfolio": "Liberia", "contact": "", "email": ""},
+  {"sno": "127", "name": "Ansh Sharma", "class": "9th", "section": "Shakespeare", "committee": "UNGA", "portfolio": "Russian Federation", "contact": "", "email": ""},
+  {"sno": "128", "name": "Deevanshi Gupta", "class": "9th", "section": "Shakespeare", "committee": "UNHRC", "portfolio": "Kenya", "contact": "", "email": ""},
+  {"sno": "129", "name": "Kanika Singh", "class": "8th", "section": "Heather", "committee": "UNCSW", "portfolio": "Somalia", "contact": "", "email": ""},
+  {"sno": "130", "name": "Gunjan", "class": "7th", "section": "Clover", "committee": "UNGA", "portfolio": "Malaysia", "contact": "", "email": ""},
+  {"sno": "131", "name": "Lakhit Sharma", "class": "5th", "section": "Zinnia", "committee": "WHO Beginners", "portfolio": "Madagascar", "contact": "", "email": ""},
+  {"sno": "132", "name": "Daksh", "class": "10th", "section": "Browning", "committee": "IP", "portfolio": "Caricature", "contact": "", "email": ""},
+  {"sno": "134", "name": "Yashashvi Arya", "class": "8th", "section": "Marigold", "committee": "WHO Beginners", "portfolio": "Tunisia", "contact": "", "email": ""},
+  {"sno": "135", "name": "Jashan Sharma", "class": "10th", "section": "Coleridge", "committee": "IP", "portfolio": "Photography", "contact": "", "email": ""},
+  {"sno": "136", "name": "Dev", "class": "9th", "section": "Shakespeare", "committee": "UNGA", "portfolio": "Gambia", "contact": "", "email": ""},
+  {"sno": "137", "name": "Yashica Yadav", "class": "8th", "section": "Lavender", "committee": "UNCSW", "portfolio": "Denmark", "contact": "", "email": ""},
+  {"sno": "138", "name": "Sarthak Mehta", "class": "9th", "section": "Tennyson", "committee": "UNCSW", "portfolio": "Ireland", "contact": "", "email": ""},
+  {"sno": "139", "name": "Mohit Sharma", "class": "9th", "section": "John Donne", "committee": "UNGA", "portfolio": "Liberia", "contact": "", "email": ""},
+  {"sno": "140", "name": "Ashmita Nagi", "class": "8th", "section": "Rosemary", "committee": "WHO Beginners", "portfolio": "Senegal", "contact": "", "email": ""},
+  {"sno": "141", "name": "Srishti Bisht", "class": "7th", "section": "Clover", "committee": "UNCSW", "portfolio": "Morocco", "contact": "", "email": ""},
+  {"sno": "142", "name": "Devvardhan", "class": "9th", "section": "Blake", "committee": "UNGA", "portfolio": "Uae", "contact": "", "email": ""},
+  {"sno": "144", "name": "Taiysha", "class": "8th", "section": "Marigold", "committee": "WHO Beginners", "portfolio": "Jordan", "contact": "", "email": ""},
+  {"sno": "145", "name": "Abhishek Yadav", "class": "9th", "section": "Blake", "committee": "UNGA", "portfolio": "Panama", "contact": "", "email": ""},
+  {"sno": "147", "name": "Ansh Mishra", "class": "10th", "section": "Coleridge", "committee": "IP", "portfolio": "Photography", "contact": "", "email": ""},
+  {"sno": "148", "name": "Gunjan Kumari", "class": "8th", "section": "Marigold", "committee": "WHO Beginners", "portfolio": "Sweden", "contact": "", "email": ""},
+  {"sno": "149", "name": "Pyansha Mittal", "class": "10th", "section": "Chaucer", "committee": "WHO Beginners", "portfolio": "South Sudan", "contact": "", "email": ""},
+  {"sno": "150", "name": "Bhumi Saini", "class": "8th", "section": "Carnation", "committee": "WHO Beginners", "portfolio": "Tajikistan", "contact": "", "email": ""},
+  {"sno": "151", "name": "Kyra Ghandiali", "class": "11th", "section": "Williams", "committee": "UNCSW", "portfolio": "Oman", "contact": "", "email": ""},
+  {"sno": "152", "name": "Prisha", "class": "9th", "section": "O Henry", "committee": "UNCSW", "portfolio": "Zambia", "contact": "", "email": ""},
+  {"sno": "153", "name": "Namrta Chauhan", "class": "10th", "section": "Ruskin Bond", "committee": "UNHRC", "portfolio": "Fiji", "contact": "", "email": ""},
+  {"sno": "154", "name": "Vansh Rajput", "class": "10th", "section": "Frost", "committee": "UNHRC", "portfolio": "Egypt", "contact": "", "email": ""},
+  {"sno": "155", "name": "Aarav Gupta", "class": "8th", "section": "Lavender", "committee": "IP", "portfolio": "Photography", "contact": "", "email": ""},
+  {"sno": "156", "name": "Avni", "class": "9th", "section": "Austen", "committee": "UNGA", "portfolio": "Veitnam", "contact": "", "email": ""},
+  {"sno": "157", "name": "Ranvijay Chauhan", "class": "9th", "section": "John Donne", "committee": "IPL", "portfolio": "Kkr", "contact": "", "email": ""},
+  {"sno": "158", "name": "Vrinda Gambhir", "class": "10th", "section": "Coleridge", "committee": "The Fame Files", "portfolio": "Taylor Swift", "contact": "", "email": ""},
+  {"sno": "159", "name": "Aradhya Pal", "class": "7th", "section": "Jasmine", "committee": "WHO Beginners", "portfolio": "Czech Republic", "contact": "", "email": ""},
+  {"sno": "160", "name": "Abhyukt Abrol", "class": "5th", "section": "Zinnia", "committee": "WHO Beginners", "portfolio": "Turkmenistan", "contact": "", "email": ""},
+  {"sno": "161", "name": "Avni Bamby", "class": "8th", "section": "Marigold", "committee": "WHO Beginners", "portfolio": "Tanzania", "contact": "+91 7009172576", "email": "binniannu@gmail.com"},
+  {"sno": "162", "name": "Dev Bansal", "class": "10th", "section": "Brooke", "committee": "IP", "portfolio": "Caricature", "contact": "+91 9781427031", "email": "devbansal1790@gmail.com"},
+  {"sno": "163", "name": "Girija", "class": "9th", "section": "Austen", "committee": "IP", "portfolio": "Photography", "contact": "+91 9888521029", "email": "poojagoyal406@gmail.com"},
+  {"sno": "164", "name": "Rashi Panghal", "class": "10th", "section": "Chaucer", "committee": "IP", "portfolio": "Journalism", "contact": "+91 9888753029", "email": "poojapanghal@214gmail.com"},
+  {"sno": "165", "name": "Surbhi", "class": "9th", "section": "Tennyson", "committee": "IP", "portfolio": "Journalism", "contact": "+91 7986549936", "email": "poojasemwal045@gmail.com"},
+  {"sno": "166", "name": "Pranusha Chauhan", "class": "10th", "section": "", "committee": "UNHRC", "portfolio": "Albania", "contact": "+91 8882499505", "email": ""},
+  {"sno": "167", "name": "Yashvi Kashyap", "class": "11th", "section": "Williams", "committee": "UNCSW", "portfolio": "Kenya", "contact": "+91 9056881766", "email": ""},
+  {"sno": "168", "name": "Riya", "class": "9th", "section": "Arnold", "committee": "UNHRC", "portfolio": "Chile", "contact": "+91 7652803057", "email": "alizaverma2010@icloud.com"},
+  {"sno": "169", "name": "Akshita Nautiyal", "class": "8th", "section": "Carnation", "committee": "UNHRC", "portfolio": "Libya", "contact": "+91 8558904035", "email": "archanarawat54@gmail.com"},
+  {"sno": "170", "name": "Aarush Kansal", "class": "10th", "section": "Brooke", "committee": "IP", "portfolio": "Journalism", "contact": "+91 6230200436", "email": "aarushkansal16@gmail.com"},
+  {"sno": "171", "name": "Archisa Aggarwal", "class": "8th", "section": "Iris", "committee": "UNCSW", "portfolio": "Argentina", "contact": "+91 9717917858", "email": "Rashmiagrawal2k2@gmail.com"},
+  {"sno": "172", "name": "Mishika Handa", "class": "9th", "section": "Austen", "committee": "UNHRC", "portfolio": "Thailand", "contact": "+91 9034083383", "email": "mishika0083@gmail.com"},
+  {"sno": "173", "name": "Anubhav kumar", "class": "11th", "section": "Kotler", "committee": "AIPPM", "portfolio": "Adhir Ranjan Chowdhury", "contact": "+91 9988290035", "email": "kanubhav275@gmail.com"},
+  {"sno": "174", "name": "taranveer singh", "class": "10th", "section": "Wordsworth", "committee": "IP", "portfolio": "Photography", "contact": "+91 8901077711", "email": "taranveersingh2011@gmail.com"},
+  {"sno": "175", "name": "Devishi Sharma", "class": "7th", "section": "Chrysanthemum", "committee": "WHO Beginners", "portfolio": "Nepal", "contact": "+91 9914096778", "email": "casharma.rajeev@gmail.com"},
+  {"sno": "176", "name": "Neeharika Sarkar", "class": "12th", "section": "Teresa", "committee": "UNGA", "portfolio": "Usa", "contact": "+91 8295987099", "email": "neeharikasarkar091@gmail.com"},
+  {"sno": "177", "name": "Arushi Negi", "class": "9th", "section": "Shakespeare", "committee": "UNGA", "portfolio": "Chile", "contact": "+91 8968148101", "email": "ashishnegi05@gmail.com"},
+  {"sno": "178", "name": "Aradhya", "class": "9th", "section": "D. Lewis", "committee": "UNGA", "portfolio": "Costa Rica", "contact": "+91 7807777735", "email": "aradhya1665@gmail.com"},
+  {"sno": "179", "name": "Kanika Bakshi", "class": "7th", "section": "Dahlia", "committee": "WHO Beginners", "portfolio": "Guinea", "contact": "+91 9888686951", "email": "kavitasharma8484@gmail.com"},
+  {"sno": "180", "name": "Gauransh", "class": "7th", "section": "Jasmine", "committee": "UNHRC", "portfolio": "Maldives", "contact": "+91 9646202003", "email": "shavipsw16@gmail.com"},
+  {"sno": "181", "name": "Aarav Rai", "class": "7th", "section": "Gladiolus", "committee": "WHO Beginners", "portfolio": "Luxembourg", "contact": "+91 9023889455", "email": "minakshi2231@gmail.com"},
+  {"sno": "182", "name": "Kinjal", "class": "8th", "section": "Lavender", "committee": "WHO Beginners", "portfolio": "Japan", "contact": "+91 9289840151", "email": "ritikas.jindal@gmail.com"},
+  {"sno": "183", "name": "Shivay", "class": "7th", "section": "Gladiolus", "committee": "WHO Beginners", "portfolio": "Angola", "contact": "+91 7291856229", "email": "hmvals72@gmail.com"},
+  {"sno": "184", "name": "Adhvika Agarwal", "class": "9th", "section": "", "committee": "UNHRC", "portfolio": "Uk", "contact": "720756636", "email": ""},
+  {"sno": "185", "name": "Uday Sandhu", "class": "10th", "section": "Whitman", "committee": "UNHRC", "portfolio": "Italy", "contact": "+91 8570045781", "email": "udayvirsandhu051@gmail.com"},
+  {"sno": "186", "name": "Jeevika Sahni", "class": "9th", "section": "", "committee": "UNHRC", "portfolio": "Serbia", "contact": "+91 9878250300", "email": "jeevikasahni5@gmail.com"}
+];
+const COMMITTEE_NAMES = {
+  'UNSC'         : 'United Nations Security Council',
+  'UNGA'         : 'United Nations General Assembly',
+  'UNHRC'        : 'United Nations Human Rights Council',
+  'UNCSW'        : 'UN Commission on the Status of Women',
+  'WHO'          : 'World Health Organization',
+  'WHO Beginners': 'WHO — Beginners Committee',
+  'AIPPM'        : 'All India Political Parties Meet',
+  'IPL'          : 'Indian Premier League Simulation',
+  'IP'           : 'International Press',
+  'The Fame Files': 'The Fame Files Committee',
+  'DISEC'        : 'Disarmament & International Security'
+};
+
+const PORTFOLIO_SUB = {
+  'UNSC'         : 'Country Representation',
+  'UNGA'         : 'Country Representation',
+  'UNHRC'        : 'Country Representation',
+  'UNCSW'        : 'Country Representation',
+  'WHO'          : 'Country Representation',
+  'WHO Beginners': 'Country Representation',
+  'AIPPM'        : 'Political Leader / Representative',
+  'IPL'          : 'Team Assignment',
+  'IP'           : 'Press Role / Specialisation',
+  'The Fame Files': 'Pop Star / Icon'
+};
+
+const AGENDAS = {
+  'UNSC':{
+    topic:'Maintaining International Peace & Security',
+    desc:'The UN Security Council debates critical issues of international peace and security — conflict resolution, sanctions, peacekeeping operations, and preventing the spread of weapons of mass destruction.'
+  },
+  'UNGA':{
+    topic:'Sustainable Development & Global Governance',
+    desc:'The General Assembly addresses matters of global concern including sustainable development, humanitarian affairs, climate change, and the promotion of international law and multilateral cooperation.'
+  },
+  'UNHRC':{
+    topic:'Promotion and Protection of Human Rights',
+    desc:'The UN Human Rights Council works to promote and protect human rights globally, addressing violations, recommending policies, and supporting the entire UN human rights system.'
+  },
+  'UNCSW':{
+    topic:'Gender Equality & Empowerment of Women',
+    desc:"The UN Commission on the Status of Women is dedicated to gender equality and the advancement of women — evaluating progress, identifying challenges, and setting global standards for women's rights and dignity."
+  },
+  'WHO Beginners':{
+    topic:'Healthcare Access for All Nations',
+    desc:'The WHO Beginners committee introduces young diplomats to global health policy — exploring healthcare access, immunisation programs, and the role of international cooperation in fighting disease outbreaks.'
+  },
+  'WHO':{
+    topic:'Global Health Policy & Disease Prevention',
+    desc:'The World Health Organization committee debates international health emergencies, disease prevention strategies, equitable healthcare access in developing nations, and coordinated global responses to health crises.'
+  },
+  'AIPPM':{
+    topic:'National Development & Policy Reform in India',
+    desc:"The All India Political Parties Meet brings together representatives of India's major political parties to debate national policies, governance reforms, economic development priorities, and pressing social challenges."
+  },
+  'IPL':{
+    topic:'Cricket Governance & Sports Diplomacy',
+    desc:"The IPL Simulation committee explores the governance of the Indian Premier League — covering player auctions, franchise management, broadcasting rights, and cricket's cultural and diplomatic significance in India."
+  },
+  'IP':{
+    topic:'Press Freedom & Ethical Journalism',
+    desc:'The International Press committee places delegates in the role of journalists, photographers, and correspondents — filing reports, conducting interviews, and navigating the ethics of modern media at a global summit.'
+  },
+  'The Fame Files':{
+    topic:'Pop Culture, Media & Global Soft Power',
+    desc:'A unique committee exploring the worldwide cultural impact of pop icons, streaming media trends, and the intersection of entertainment with international affairs and the exercise of soft power.'
+  },
+  'DEFAULT':{
+    topic:'Committee Agenda — Visit satlujmun.com',
+    desc:'Full agenda details, background guides, and position paper guidelines for your committee are available on the official SPSMUN 3.0 website. Visit satlujmun.com for complete resources and preparation materials.'
+  }
+};
+
+/* ── PAGE TRANSITIONS ──────────────────────── */
+function showDash() {
+  const l = document.getElementById('login');
+  const d = document.getElementById('dash');
+  l.classList.remove('visible');
+  l.classList.add('hidden-left');
+  d.classList.remove('hidden-right');
+  d.classList.add('visible');
+  d.scrollTop = 0;
+}
+
+function goBack() {
+  const l = document.getElementById('login');
+  const d = document.getElementById('dash');
+  d.classList.remove('visible');
+  d.classList.add('hidden-right');
+  l.classList.remove('hidden-left');
+  l.classList.add('visible');
+  document.getElementById('credInput').value = '';
+  document.getElementById('credErr').classList.remove('show');
+  document.getElementById('credInput').classList.remove('err');
+  setTimeout(() => document.getElementById('credInput').focus(), 580);
+}
+
+/* ── LOGIN ─────────────────────────────────── */
+function doLogin() {
+  const raw   = document.getElementById('credInput').value.trim();
+  const clean = raw.toLowerCase().replace(/\s+/g, '');
+  const errEl = document.getElementById('credErr');
+  const inpEl = document.getElementById('credInput');
+
+  if (!clean) {
+    errEl.textContent = 'Please enter your phone number or email address.';
+    errEl.classList.add('show');
+    inpEl.classList.add('err');
+    return;
+  }
+
+  const inputNoCode = clean.replace(/^\+91/, '');
+
+  const found = DELEGATES.find(d => {
+    const ph = (d.contact || '').replace(/\s+/g, '').replace(/^\+91/, '').toLowerCase();
+    const em = (d.email   || '').toLowerCase();
+    return (ph && ph === inputNoCode) || (em && em === clean);
+  });
+
+  if (!found) {
+    errEl.textContent = 'No delegate found. Please check your phone/email or contact admin.';
+    errEl.classList.add('show');
+    inpEl.classList.add('err');
+    return;
+  }
+
+  errEl.classList.remove('show');
+  inpEl.classList.remove('err');
+  fillDash(found);
+  showDash();
+}
+
+/* ── FILL DASHBOARD ────────────────────────── */
+function fillDash(d) {
+  const committee = d.committee || '—';
+  const portfolio = d.portfolio || '—';
+  const commFull  = COMMITTEE_NAMES[committee]  || committee;
+  const portSub   = PORTFOLIO_SUB[committee]    || 'Portfolio Assignment';
+  const agenda    = AGENDAS[committee]          || AGENDAS['DEFAULT'];
+
+  const nameCap = d.name.split(' ')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+  const initials = d.name.trim().split(/\s+/)
+    .map(w => w[0]).join('').substring(0, 2).toUpperCase();
+
+  document.getElementById('navName').textContent    = nameCap;
+  document.getElementById('avatarEl').textContent   = initials;
+  document.getElementById('dName').textContent      = nameCap;
+  document.getElementById('dSno').textContent       = '#' + d.sno;
+  document.getElementById('dClassSec').textContent  =
+    'Class ' + d.class + (d.section ? ' · Section ' + d.section : '');
+  document.getElementById('dClass').textContent     =
+    'Class ' + d.class + (d.section ? ', ' + d.section : '');
+
+  const phEl = document.getElementById('dPhone');
+  phEl.innerHTML = d.contact
+    ? `<a href="tel:${d.contact}">${d.contact}</a>`
+    : `<span class="miss">Not registered — contact admin</span>`;
+
+  const emEl = document.getElementById('dEmail');
+  emEl.innerHTML = d.email
+    ? `<a href="mailto:${d.email}">${d.email}</a>`
+    : `<span class="miss">Not registered — contact admin</span>`;
+
+  document.getElementById('dComm').textContent        = committee;
+  document.getElementById('dCommFull').textContent    = commFull;
+  document.getElementById('dPortfolio').textContent   = portfolio;
+  document.getElementById('dPortfolioSub').textContent = portSub;
+  document.getElementById('dAgendaTopic').textContent = agenda.topic;
+  document.getElementById('dAgendaDesc').textContent  = agenda.desc;
+}
+
+/* ── ENTER KEY ─────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('login').classList.contains('visible')) {
+    doLogin();
+  }
+});
+</script>
+</body>
+</html>
