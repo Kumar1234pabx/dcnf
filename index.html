@@ -718,7 +718,8 @@ const DELEGATES = [
 // ⚙️  ADMIN: Replace this URL after setting up Google Apps Script
 //     Instructions are in the SETUP GUIDE provided separately.
 // ─────────────────────────────────────────────────────────
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwnyuYO5a6aPri82JUVPLCud0azBAZ9WbmNLKEAjahzYCNNP74x04J6r_8au_m4bCNU/exec';
+const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
 const COMMITTEE_NAMES = {
   'UNSC'          : 'United Nations Security Council',
   'UNGA'          : 'United Nations General Assembly',
@@ -772,10 +773,7 @@ function goBack() {
   document.getElementById('credInput').value = '';
   document.getElementById('credErr').classList.remove('show');
   document.getElementById('credInput').classList.remove('err');
-  // Reset request form on logout
-  closeReqForm();
-  document.getElementById('reqStatus').className = 'req-status';
-  document.getElementById('reqStatus').textContent = '';
+  resetRequestForm();
   setTimeout(() => document.getElementById('credInput').focus(), 580);
 }
 
@@ -839,6 +837,8 @@ function fillDash(d) {
   document.getElementById('dAgendaTopic').textContent = agenda.topic;
   document.getElementById('dAgendaDesc').textContent  = agenda.desc;
 
+  // Always fully reset the request form for each new delegate login
+  resetRequestForm();
   // Pre-fill request form auto fields
   document.getElementById('rName').value     = nameCap;
   document.getElementById('rPhone').value    = d.contact || 'Not registered';
@@ -877,11 +877,30 @@ function closeReqForm() {
       <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
     </svg>
     Request for Change`;
-  // Reset fields
-  document.getElementById('rNewComm').value  = '';
-  document.getElementById('rNewPort').value  = '';
-  document.getElementById('rReason').value   = '';
+  document.getElementById('rNewComm').value = '';
+  document.getElementById('rNewPort').value = '';
+  document.getElementById('rReason').value  = '';
   document.getElementById('rPortErr').classList.remove('show');
+}
+
+// Full reset — called on every new login and on goBack
+// Re-enables ALL fields, resets button, clears status
+function resetRequestForm() {
+  closeReqForm();
+  // Re-enable all editable fields (may have been disabled after a successful submit)
+  document.getElementById('rNewComm').disabled = false;
+  document.getElementById('rNewPort').disabled = false;
+  document.getElementById('rReason').disabled  = false;
+  document.getElementById('rNewComm').classList.remove('err');
+  document.getElementById('rNewPort').classList.remove('err');
+  // Reset submit button fully
+  const btn = document.getElementById('reqSubmitBtn');
+  btn.disabled    = false;
+  btn.textContent = 'Submit Request →';
+  // Clear status message
+  const st = document.getElementById('reqStatus');
+  st.className   = 'req-status';
+  st.textContent = '';
 }
 
 // ── SUBMIT REQUEST → GOOGLE SHEETS ───────────────────────
@@ -939,7 +958,8 @@ async function submitRequest() {
     statusEl.className = 'req-status success';
     statusEl.textContent = '✓ Your request has been submitted successfully. The organising committee will review it and contact you if a change is approved. Please do not submit multiple requests.';
     submitBtn.textContent = 'Request Submitted ✓';
-    // Disable form fields after success
+    submitBtn.disabled = true;
+    // Only disable the editable fields — auto-filled fields stay as-is
     document.getElementById('rNewComm').disabled = true;
     document.getElementById('rNewPort').disabled = true;
     document.getElementById('rReason').disabled  = true;
